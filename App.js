@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
   SafeAreaView,
   StyleSheet,
@@ -111,4 +112,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default () => {
+  return (
+    <PaperProvider>
+      <App />
+    </PaperProvider>
+  );
+};
