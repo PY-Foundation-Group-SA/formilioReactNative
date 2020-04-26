@@ -1,41 +1,44 @@
 import createDataContext from './createDataContext';
+import {storeData} from '../utils/asyncStorageHelper';
 
 const UserContext = (UserSet, action) => {
   switch (action.type) {
     case 'add_apiURl':
+      storeData('API_URL', action.payload.apiUrl);
       return {
         apiUrl: action.payload.apiUrl,
-        header: UserSet.header,
+        token: UserSet.token,
         theme: UserSet.theme,
       };
     case 'remove_apiURL':
-      return {apiUrl: '', header: UserSet.header, theme: UserSet.theme};
-    case 'add_header':
+      return {apiUrl: '', token: UserSet.token, theme: UserSet.theme};
+    case 'add_token':
+      storeData('TOKEN', action.payload.token);
       return {
         apiUrl: UserSet.apiUrl,
-        header: action.payload.header,
+        token: action.payload.token,
         theme: UserSet.theme,
       };
-    case 'remove_header':
-      return {
-        apiUrl: UserSet.apiUrl,
-        header: '',
-        theme: UserSet.theme,
-      };
+    case 'remove_token':
+      return {apiUrl: UserSet.apiUrl, token: '', theme: UserSet.theme};
     case 'darkTheme_enable':
       return {
         apiUrl: UserSet.apiUrl,
-        header: UserSet.header,
+        token: UserSet.token,
         theme: true,
       };
     case 'darkTheme_disable':
       return {
         apiUrl: UserSet.apiUrl,
-        header: UserSet.header,
+        token: UserSet.token,
         theme: false,
       };
     default:
-      return [0];
+      return {
+        apiUrl: UserSet.apiUrl,
+        token: UserSet.token,
+        theme: UserSet.theme,
+      };
   }
 };
 
@@ -51,15 +54,15 @@ const removeApiUrl = (dispatch) => {
   };
 };
 
-const addHeader = (dispatch) => {
-  return (header) => {
-    dispatch({type: 'add_header', payload: {header}});
+const addToken = (dispatch) => {
+  return (token) => {
+    dispatch({type: 'add_token', payload: {token}});
   };
 };
 
-const removeHeader = (dispatch) => {
+const removeToken = (dispatch) => {
   return () => {
-    dispatch({type: 'remove_header'});
+    dispatch({type: 'remove_token'});
   };
 };
 
@@ -80,14 +83,14 @@ export const {Context, Provider} = createDataContext(
   {
     addApiUrl,
     removeApiUrl,
-    addHeader,
-    removeHeader,
+    addToken,
+    removeToken,
     enableDarkTheme,
     disableDarkTheme,
   },
   {
     apiUrl: '',
-    header: '',
+    token: '',
     theme: false,
   },
 );
