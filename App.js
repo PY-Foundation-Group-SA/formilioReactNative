@@ -11,7 +11,7 @@ const UserStartingSwitch = createSwitchNavigator(
     UserStartingScreen,
   },
   {
-    initialRouteName: 'UserStartingScreen',
+    initialRouteName: 'SplashScreen',
   },
 );
 

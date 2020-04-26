@@ -9,26 +9,26 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import {
-  Context as ThemeContext,
-  Provider as ThemeProvider,
-} from './src/contexts/ThemeContext';
+  Provider as UserProvider,
+  Context as UserContext,
+} from './src/contexts/UserContext';
 import App from './App';
 import {name as appName} from './app.json';
 
 export default function Main() {
   return (
-    <ThemeProvider>
-      <ThemeContext>
+    <UserProvider>
+      <UserContext>
         {(value) => {
-          const isDarkModeOn = value.state[0];
+          const isDarkModeOn = value.state.theme;
           return (
             <PaperProvider theme={isDarkModeOn ? DarkTheme : DefaultTheme}>
               <App theme={isDarkModeOn ? 'dark' : 'light'} />
             </PaperProvider>
           );
         }}
-      </ThemeContext>
-    </ThemeProvider>
+      </UserContext>
+    </UserProvider>
   );
 }
 
