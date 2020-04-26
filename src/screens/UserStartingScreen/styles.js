@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
 export default StyleSheet.create({
   userStartingContainer: {
@@ -7,5 +7,13 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  inputContainer: {
+    marginVertical: 20,
+    width: Dimensions.get('window').width - 40,
+  },
+  modeToggleContainer: {
+    position: 'absolute',
+    bottom: 10,
   },
 });

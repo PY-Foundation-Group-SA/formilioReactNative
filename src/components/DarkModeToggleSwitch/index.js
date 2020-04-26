@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Switch} from 'react-native-paper';
+import {Switch, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
 // importing context for theme preference
@@ -8,7 +8,7 @@ import {Context as ThemeContext} from '../../contexts/ThemeContext';
 
 const DarkModeToggleSwitch = () => {
   const {state, enableDarkTheme, disableDarkTheme} = useContext(ThemeContext);
-  console.log(state);
+
   const _onToggleSwitch = () => {
     if (state[0]) {
       disableDarkTheme();
@@ -20,7 +20,9 @@ const DarkModeToggleSwitch = () => {
   return (
     <View style={styles.toggleButtonContainer}>
       <Switch value={!!state[0]} onValueChange={_onToggleSwitch} />
-      <Icon name={state[0] ? 'moon' : 'sun'} size={24} />
+      <Text>
+        <Icon name={state[0] ? 'moon' : 'sun'} size={24} />
+      </Text>
     </View>
   );
 };
