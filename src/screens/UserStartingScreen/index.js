@@ -1,10 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {View} from 'react-native';
-import {Text, Headline, TextInput, Button} from 'react-native-paper';
+import {
+  Headline,
+  TextInput,
+  Button,
+  ActivityIndicator,
+} from 'react-native-paper';
 
 // importing contexts
-import {Context as ThemeContext} from '../../contexts/ThemeContext';
+import {Context as UserContext} from '../../contexts/UserContext';
 
 // importing components
 import DarkModeToggleSwitch from '../../components/DarkModeToggleSwitch';
@@ -13,17 +18,15 @@ import DarkModeToggleSwitch from '../../components/DarkModeToggleSwitch';
 import styles from './styles';
 
 class UserStartingScreen extends Component {
-  static contextType = ThemeContext;
+  static contextType = UserContext;
   constructor(props) {
     super(props);
 
     this.state = {
       apiUrl: '',
+      header: '',
+      isLoading: false,
     };
-  }
-
-  componentDidMount() {
-    console.log('Dark Theme Enabled: ', this.context.state[0]);
   }
 
   setApiUrl = (apiUrl) => {
@@ -32,12 +35,37 @@ class UserStartingScreen extends Component {
     });
   };
 
+  setHeader = (header) => {
+    this.setState({
+      header,
+    });
+  };
+
   onPress = () => {
     console.log('Button Pressed');
+    this.setState({
+      isLoading: true,
+    });
   };
 
   render() {
-    const theme = this.context.state[0];
+    const theme = this.context.state.theme;
+    const {isLoading, apiUrl, header} = this.state;
+
+    if (isLoading) {
+      return (
+        <View
+          style={[
+            styles.userStartingContainer,
+            {
+              backgroundColor: theme ? 'black' : 'white',
+            },
+          ]}>
+          <ActivityIndicator animating={true} />
+        </View>
+      );
+    }
+
     return (
       <View
         style={[
@@ -50,9 +78,18 @@ class UserStartingScreen extends Component {
         <View style={styles.inputContainer}>
           <TextInput
             mode="outlined"
-            label="Api Url"
-            value={this.state.apiUrl}
+            label="Your Url"
+            value={apiUrl}
             onChangeText={(apiUrl) => this.setApiUrl(apiUrl)}
+          />
+          <TextInput
+            mode="outlined"
+            label="Your Secret"
+            value={header}
+            onChangeText={(header) => this.setHeader(header)}
+            style={{
+              marginTop: 5,
+            }}
           />
         </View>
         <View>

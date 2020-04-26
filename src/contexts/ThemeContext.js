@@ -1,6 +1,6 @@
 import createDataContext from './createDataContext';
 
-const ThemeReducer = (blogPosts, action) => {
+const ThemeReducer = (tmp, action) => {
   switch (action.type) {
     case 'darkTheme_enable':
       return [1];
