@@ -1,19 +1,18 @@
-import React from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
-import {View, Text} from 'react-native';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 
-const App: () => React$Node = () => {
-  return (
-    <View>
-      <Text>Lamo</Text>
-    </View>
-  );
-};
+// importing screens
+import SplashScreen from './src/screens/SplashScreen';
+import UserStartingScreen from './src/screens/UserStartingScreen';
 
-export default () => {
-  return (
-    <PaperProvider>
-      <App />
-    </PaperProvider>
-  );
-};
+const UserStartingSwitch = createSwitchNavigator(
+  {
+    SplashScreen,
+    UserStartingScreen,
+  },
+  {
+    initialRouteName: 'SplashScreen',
+  },
+);
+
+export default createAppContainer(UserStartingSwitch);
