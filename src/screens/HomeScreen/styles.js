@@ -4,10 +4,11 @@ export default StyleSheet.create({
   homeScreenLoaderContainer: {
     flex: 1,
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     zIndex: 1,
+    paddingTop: Dimensions.get('window').height / 2 - 80,
   },
   homeScreenMainContainer: {
     flex: 1,

@@ -20,7 +20,7 @@ const SplashScreen = (props) => {
       duration: 2000,
       useNativeDriver: true,
     }).start(async () => {
-      const [apiUrl, token] = await Promise.all([
+      const [token, apiUrl] = await Promise.all([
         getData('TOKEN'),
         getData('API_URL'),
       ]);
@@ -34,9 +34,9 @@ const SplashScreen = (props) => {
       }).start(() => {
         if (state.token && state.apiUrl) {
           props.navigation.navigate('HomeScreen');
-          return;
+        } else {
+          props.navigation.navigate('UserStartingScreen');
         }
-        props.navigation.navigate('UserStartingScreen');
       });
     });
   }, [props.navigation, start, state, addApiUrl, addToken]);

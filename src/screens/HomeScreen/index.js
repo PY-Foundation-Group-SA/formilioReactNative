@@ -30,25 +30,32 @@ class HomeScreen extends Component {
       isLoading: true,
       formList: [],
       searchText: '',
+      isListRefreshing: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {state} = this.context;
+    console.log(state.apiUrl, state.token);
     if (!state.apiUrl && !state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;
+    } else {
+      this.fetchFormsFromDatabase();
     }
-    getAllForms(state.apiUrl, state.token)
-      .then((formList) => {
-        this.setFormList(formList);
-        this.setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        this.setIsLoading(false);
-      });
   }
+
+  fetchFormsFromDatabase = async () => {
+    const {state} = this.context;
+    try {
+      const formList = await getAllForms(state.apiUrl, state.token);
+      this.setFormList(formList);
+    } catch (err) {
+      console.log('Error on getAll');
+    } finally {
+      this.setIsLoading(false);
+    }
+  };
 
   setIsLoading = (bool) => {
     this.setState({
@@ -80,9 +87,8 @@ class HomeScreen extends Component {
     );
   };
 
-  render() {
-    const theme = this.context.state.theme;
-    const {isLoading, searchText, formList} = this.state;
+  ListEmptyComponent = (theme) => {
+    const {isLoading} = this.state;
 
     if (isLoading) {
       return (
@@ -97,6 +103,29 @@ class HomeScreen extends Component {
         </View>
       );
     }
+
+    return (
+      <View
+        style={[
+          styles.homeScreenLoaderContainer,
+          {
+            backgroundColor: theme ? 'black' : 'white',
+          },
+        ]}>
+        <Text>Create A Form</Text>
+      </View>
+    );
+  };
+
+  onRefresh = async () => {
+    this.setState({isListRefreshing: true});
+    await this.fetchFormsFromDatabase();
+    this.setState({isListRefreshing: false});
+  };
+
+  render() {
+    const theme = this.context.state.theme;
+    const {searchText, formList, isListRefreshing} = this.state;
 
     return (
       <View
@@ -117,9 +146,9 @@ class HomeScreen extends Component {
           keyExtractor={(item, index) => item.formName}
           renderItem={this.renderList}
           ItemSeparatorComponent={() => <Divider />}
-          ListEmptyComponent={() => <Text>List is empty</Text>}
-          refreshing={false}
-          onRefresh={() => null}
+          ListEmptyComponent={this.ListEmptyComponent(theme)}
+          refreshing={isListRefreshing}
+          onRefresh={this.onRefresh}
         />
         <Fab />
       </View>
