@@ -22,12 +22,14 @@ const UserContext = (UserSet, action) => {
     case 'remove_token':
       return {apiUrl: UserSet.apiUrl, token: '', theme: UserSet.theme};
     case 'darkTheme_enable':
+      storeData('THEME', 'true');
       return {
         apiUrl: UserSet.apiUrl,
         token: UserSet.token,
         theme: true,
       };
     case 'darkTheme_disable':
+      storeData('THEME', 'false');
       return {
         apiUrl: UserSet.apiUrl,
         token: UserSet.token,
