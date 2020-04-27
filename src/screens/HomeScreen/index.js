@@ -1,10 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View} from 'react-native';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import {View, FlatList, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  Text,
+  Searchbar,
+  Divider,
+  List,
+} from 'react-native-paper';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
+
+// importing component
+import Fab from '../../components/Fab';
 
 // importing apiHelpers
 import {getAllForms} from '../../utils/apiHelpers';
@@ -20,6 +29,7 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       formList: [],
+      searchText: '',
     };
   }
 
@@ -31,7 +41,6 @@ class HomeScreen extends Component {
     }
     getAllForms(state.apiUrl, state.token)
       .then((formList) => {
-        console.log(formList);
         this.setFormList(formList);
         this.setIsLoading(false);
       })
@@ -53,15 +62,33 @@ class HomeScreen extends Component {
     });
   };
 
+  setSearchText = (search) => {
+    this.setState({
+      searchText: search,
+    });
+  };
+
+  renderList = ({item, index}) => {
+    return (
+      <TouchableOpacity>
+        <List.Item
+          title={item.formName}
+          description="Item description"
+          left={(props) => <List.Icon {...props} icon="folder" />}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   render() {
     const theme = this.context.state.theme;
-    const {isLoading} = this.state;
+    const {isLoading, searchText, formList} = this.state;
 
     if (isLoading) {
       return (
         <View
           style={[
-            styles.userStartingContainer,
+            styles.homeScreenLoaderContainer,
             {
               backgroundColor: theme ? 'black' : 'white',
             },
@@ -72,8 +99,29 @@ class HomeScreen extends Component {
     }
 
     return (
-      <View>
-        <Text>Loaded</Text>
+      <View
+        style={[
+          styles.homeScreenMainContainer,
+          {
+            backgroundColor: theme ? 'black' : 'white',
+          },
+        ]}>
+        <Searchbar
+          placeholder="Search for form"
+          onChangeText={(search) => this.setSearchText(search)}
+          value={searchText}
+        />
+        <FlatList
+          style={{alignSelf: 'stretch'}}
+          data={formList}
+          keyExtractor={(item, index) => item.formName}
+          renderItem={this.renderList}
+          ItemSeparatorComponent={() => <Divider />}
+          ListEmptyComponent={() => <Text>List is empty</Text>}
+          refreshing={false}
+          onRefresh={() => null}
+        />
+        <Fab />
       </View>
     );
   }

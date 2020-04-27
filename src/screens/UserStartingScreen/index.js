@@ -42,6 +42,13 @@ class UserStartingScreen extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const {state} = this.context;
+    if (state.apiUrl && state.token) {
+      this.props.navigation.navigate('HomeScreen');
+    }
+  }
+
   setApiUrl = (apiUrl) => {
     this.setState({
       apiUrl,
