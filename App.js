@@ -5,12 +5,33 @@ import {createStackNavigator} from 'react-navigation-stack';
 import SplashScreen from './src/screens/SplashScreen';
 import UserStartingScreen from './src/screens/UserStartingScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import AddFormScreen from './src/screens/AddFormScreen';
+
+const mainAppStack = createStackNavigator(
+  {
+    HomeScreen: {
+      screen: HomeScreen,
+      navigationOptions: {
+        title: 'Formilio',
+      },
+    },
+    AddFormScreen: {
+      screen: AddFormScreen,
+      navigationOptions: {
+        title: 'Add Form',
+      },
+    },
+  },
+  {
+    initialRouteName: 'HomeScreen',
+  },
+);
 
 const UserStartingSwitch = createSwitchNavigator(
   {
     SplashScreen,
     UserStartingScreen,
-    HomeScreen,
+    mainAppStack,
   },
   {
     initialRouteName: 'SplashScreen',
