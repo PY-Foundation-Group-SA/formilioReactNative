@@ -41,7 +41,7 @@ class Fab extends Component {
                 icon: ({size}) => {
                   return <Icon name="plus" size={size} />;
                 },
-                onPress: () => console.log('Pressed add'),
+                onPress: () => this.props.navigation.navigate('AddFormScreen'),
               },
               {
                 icon: ({size}) => {

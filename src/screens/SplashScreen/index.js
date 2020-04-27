@@ -10,7 +10,7 @@ import {getData} from '../../utils/asyncStorageHelper';
 const {Value} = Animated;
 
 const SplashScreen = (props) => {
-  const {state, addToken, addApiUrl} = useContext(UserContext);
+  const {state, addToken, addApiUrl, enableDarkTheme} = useContext(UserContext);
   const start = useRef(new Value(0)).current;
 
   useEffect(() => {
@@ -20,13 +20,16 @@ const SplashScreen = (props) => {
       duration: 2000,
       useNativeDriver: true,
     }).start(async () => {
-      const [token, apiUrl] = await Promise.all([
+      const [token, apiUrl, theme] = await Promise.all([
         getData('TOKEN'),
         getData('API_URL'),
+        getData('THEME'),
       ]);
       if (apiUrl && token) {
         await Promise.all([addToken(token), addApiUrl(apiUrl)]);
       }
+      // setting a theme
+      theme === 'true' ? enableDarkTheme() : null;
       Animated.timing(start, {
         toValue: 0,
         duration: 2000,
@@ -39,7 +42,7 @@ const SplashScreen = (props) => {
         }
       });
     });
-  }, [props.navigation, start, state, addApiUrl, addToken]);
+  }, [props.navigation, start, state, addApiUrl, addToken, enableDarkTheme]);
 
   return (
     <View style={styles.viewStyles}>

@@ -150,7 +150,7 @@ class HomeScreen extends Component {
           refreshing={isListRefreshing}
           onRefresh={this.onRefresh}
         />
-        <Fab />
+        <Fab navigation={this.props.navigation} />
       </View>
     );
   }
