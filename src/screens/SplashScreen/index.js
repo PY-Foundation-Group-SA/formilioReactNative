@@ -1,9 +1,16 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import {View, StyleSheet, Animated} from 'react-native';
+
+// importing context
+import {Context as UserContext} from '../../contexts/UserContext';
+
+// importing asyncHelpers
+import {getData} from '../../utils/asyncStorageHelper';
 
 const {Value} = Animated;
 
 const SplashScreen = (props) => {
+  const {state, addToken, addApiUrl} = useContext(UserContext);
   const start = useRef(new Value(0)).current;
 
   useEffect(() => {
@@ -12,16 +19,27 @@ const SplashScreen = (props) => {
       toValue: 1,
       duration: 2000,
       useNativeDriver: true,
-    }).start(() => {
+    }).start(async () => {
+      const [apiUrl, token] = await Promise.all([
+        getData('TOKEN'),
+        getData('API_URL'),
+      ]);
+      if (apiUrl && token) {
+        await Promise.all([addToken(token), addApiUrl(apiUrl)]);
+      }
       Animated.timing(start, {
         toValue: 0,
         duration: 2000,
         useNativeDriver: true,
       }).start(() => {
+        if (state.token && state.apiUrl) {
+          props.navigation.navigate('HomeScreen');
+          return;
+        }
         props.navigation.navigate('UserStartingScreen');
       });
     });
-  }, [props.navigation, start]);
+  }, [props.navigation, start, state, addApiUrl, addToken]);
 
   return (
     <View style={styles.viewStyles}>

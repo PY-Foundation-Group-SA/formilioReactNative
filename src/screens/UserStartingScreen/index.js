@@ -34,16 +34,19 @@ class UserStartingScreen extends Component {
   }
 
   async componentDidMount() {
-    const [apiUrl, token] = await Promise.all([
-      getData('TOKEN'),
-      getData('API_URL'),
-    ]);
-    if (apiUrl && token) {
-      this.setIsLoading(false);
+    const {state} = this.context;
+    if (state.apiUrl && state.token) {
+      this.props.navigation.navigate('HomeScreen');
     } else {
       this.setIsLoading(false);
     }
-    console.log(apiUrl, token);
+  }
+
+  componentDidUpdate() {
+    const {state} = this.context;
+    if (state.apiUrl && state.token) {
+      this.props.navigation.navigate('HomeScreen');
+    }
   }
 
   setApiUrl = (apiUrl) => {
