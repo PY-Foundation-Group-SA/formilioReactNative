@@ -81,7 +81,6 @@ class AddFormScreen extends Component {
     createForm(state.apiUrl, state.token, formName, formFields)
       .then((isCreated) => {
         if (isCreated) {
-          console.log(this.props.navigation);
           this.props.navigation.goBack();
         }
       })
