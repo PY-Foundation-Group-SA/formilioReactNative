@@ -57,3 +57,22 @@ export const createForm = (apiUrl, token, formName, formField) => {
     }
   });
 };
+
+export const deleteForm = (apiUrl, token, formName) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await axios.delete(apiUrl + 'auth/deleteForm?formName=hostel', {
+        params: {
+          formName,
+        },
+        headers: {
+          Authorization: token,
+        },
+      });
+      resolve();
+    } catch (err) {
+      console.log(err);
+      reject();
+    }
+  });
+};

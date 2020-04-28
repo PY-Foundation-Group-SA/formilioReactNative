@@ -6,6 +6,7 @@ import SplashScreen from './src/screens/SplashScreen';
 import UserStartingScreen from './src/screens/UserStartingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AddFormScreen from './src/screens/AddFormScreen';
+import FormViewScreen from './src/screens/FormViewScreen';
 
 const mainAppStack = createStackNavigator(
   {
@@ -19,6 +20,12 @@ const mainAppStack = createStackNavigator(
       screen: AddFormScreen,
       navigationOptions: {
         title: 'Add Form',
+      },
+    },
+    FormViewScreen: {
+      screen: FormViewScreen,
+      navigationOptions: {
+        title: 'Form',
       },
     },
   },

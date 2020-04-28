@@ -36,14 +36,17 @@ class HomeScreen extends Component {
     this.formList = [];
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {state} = this.context;
     if (!state.apiUrl && !state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;
     } else {
-      this.fetchFormsFromDatabase();
+      await this.fetchFormsFromDatabase();
     }
+    this.props.navigation.addListener('willFocus', () => {
+      this.fetchFormsFromDatabase();
+    });
   }
 
   fetchFormsFromDatabase = async () => {
@@ -90,7 +93,12 @@ class HomeScreen extends Component {
 
   renderList = ({item, index}) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('FormViewScreen', {
+            form: item,
+          })
+        }>
         <List.Item
           title={item.formName}
           description="Item description"

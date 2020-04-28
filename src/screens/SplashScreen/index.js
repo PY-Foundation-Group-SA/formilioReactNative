@@ -37,8 +37,10 @@ const SplashScreen = (props) => {
       }).start(() => {
         if (state.token && state.apiUrl) {
           props.navigation.navigate('HomeScreen');
+          return;
         } else {
           props.navigation.navigate('UserStartingScreen');
+          return;
         }
       });
     });
