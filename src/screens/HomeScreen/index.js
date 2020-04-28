@@ -34,7 +34,7 @@ class HomeScreen extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {state} = this.context;
     console.log(state.apiUrl, state.token);
     if (!state.apiUrl && !state.token) {
