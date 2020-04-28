@@ -44,6 +44,10 @@ class HomeScreen extends Component {
     } else {
       this.fetchFormsFromDatabase();
     }
+    this.props.navigation.addListener('willFocus', () => {
+      console.log('Running');
+      this.fetchFormsFromDatabase();
+    });
   }
 
   fetchFormsFromDatabase = async () => {
@@ -90,7 +94,12 @@ class HomeScreen extends Component {
 
   renderList = ({item, index}) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('FormViewScreen', {
+            form: item,
+          })
+        }>
         <List.Item
           title={item.formName}
           description="Item description"
