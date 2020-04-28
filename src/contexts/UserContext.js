@@ -1,5 +1,5 @@
 import createDataContext from './createDataContext';
-import {storeData} from '../utils/asyncStorageHelper';
+import {storeData, removeValue} from '../utils/asyncStorageHelper';
 
 const UserContext = (UserSet, action) => {
   switch (action.type) {
@@ -11,6 +11,7 @@ const UserContext = (UserSet, action) => {
         theme: UserSet.theme,
       };
     case 'remove_apiURL':
+      removeValue('API_URL');
       return {apiUrl: '', token: UserSet.token, theme: UserSet.theme};
     case 'add_token':
       storeData('TOKEN', action.payload.token);
@@ -20,6 +21,7 @@ const UserContext = (UserSet, action) => {
         theme: UserSet.theme,
       };
     case 'remove_token':
+      removeValue('TOKEN');
       return {apiUrl: UserSet.apiUrl, token: '', theme: UserSet.theme};
     case 'darkTheme_enable':
       storeData('THEME', 'true');

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {FAB, Portal, Provider} from 'react-native-paper';
+import {Alert} from 'react-native';
+import {FAB, Portal, Provider, Snackbar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
 // importing context
@@ -12,6 +13,8 @@ class Fab extends Component {
 
     this.state = {
       open: false,
+      snack: false,
+      snackText: '',
     };
   }
 
@@ -20,10 +23,31 @@ class Fab extends Component {
   onChangeTheme = () => {
     const {state, disableDarkTheme, enableDarkTheme} = this.context;
     if (state.theme) {
+      this.setState({snack: true, snackText: 'Light Mode Turned On'});
       disableDarkTheme();
     } else {
+      this.setState({snack: true, snackText: 'Dark Mode Turned On'});
       enableDarkTheme();
     }
+  };
+
+  onDisconnectServer = async () => {
+    const {removeApiUrl, removeToken} = this.context;
+    Alert.alert(
+      'Disconnect Server',
+      'You are about to disconnect from this server!',
+      [
+        {
+          text: 'continue',
+          onPress: async () => {
+            await Promise.all([removeApiUrl(), removeToken()]);
+            this.props.navigation.navigate('UserStartingScreen');
+          },
+        },
+        {text: 'cancel'},
+      ],
+      {cancelable: true},
+    );
   };
 
   render() {
@@ -31,44 +55,48 @@ class Fab extends Component {
     const {open} = this.state;
 
     return (
-      <Provider>
-        <Portal>
-          <FAB.Group
-            open={open}
-            icon={open ? 'close' : 'plus'}
-            actions={[
-              {
-                icon: ({size}) => {
-                  return <Icon name="plus" size={size} />;
+      <>
+        <Provider>
+          <Portal>
+            <FAB.Group
+              open={open}
+              icon={open ? 'close' : 'plus'}
+              actions={[
+                {
+                  icon: ({size}) => {
+                    return <Icon name="plus" size={size} />;
+                  },
+                  onPress: () =>
+                    this.props.navigation.navigate('AddFormScreen'),
                 },
-                onPress: () => this.props.navigation.navigate('AddFormScreen'),
-              },
-              {
-                icon: ({size}) => {
-                  return <Icon name="trash" size={size} />;
+                {
+                  icon: ({size}) => {
+                    return (
+                      <Icon name={state.theme ? 'moon' : 'sun'} size={size} />
+                    );
+                  },
+                  label: 'Switch Theme',
+                  onPress: this.onChangeTheme,
                 },
-                label: 'Delete',
-                onPress: this.onChangeTheme,
-              },
-              {
-                icon: ({size}) => {
-                  return (
-                    <Icon name={state.theme ? 'moon' : 'sun'} size={size} />
-                  );
+                {
+                  icon: ({size}) => {
+                    return <Icon name="server" size={size} />;
+                  },
+                  label: 'Disconnect Server',
+                  onPress: this.onDisconnectServer,
                 },
-                label: 'Switch Theme',
-                onPress: this.onChangeTheme,
-              },
-            ]}
-            onStateChange={this._onStateChange}
-            onPress={() => {
-              if (open) {
-                // do something if the speed dial is open
-              }
-            }}
-          />
-        </Portal>
-      </Provider>
+              ]}
+              onStateChange={this._onStateChange}
+            />
+          </Portal>
+        </Provider>
+        <Snackbar
+          duration={Snackbar.DURATION_SHORT}
+          visible={this.state.snack}
+          onDismiss={() => this.setState({snack: false})}>
+          {this.state.snackText}
+        </Snackbar>
+      </>
     );
   }
 }

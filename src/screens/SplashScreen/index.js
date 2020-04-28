@@ -1,5 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect, useContext} from 'react';
 import {View, StyleSheet, Animated} from 'react-native';
+import {Headline} from 'react-native-paper';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -48,10 +50,9 @@ const SplashScreen = (props) => {
 
   return (
     <View style={styles.viewStyles}>
-      <Animated.Image
-        source={require('../../../assets/loadingLogo.png')}
-        style={{opacity: start}}
-      />
+      <Animated.Text style={{opacity: start, color: 'white', fontSize: 30}}>
+        Formilio
+      </Animated.Text>
     </View>
   );
 };
