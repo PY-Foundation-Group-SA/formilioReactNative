@@ -30,6 +30,7 @@ class FormViewScreen extends Component {
 
     this.state = {
       snack: false,
+      snackText: '',
     };
 
     this.form = this.props.navigation.getParam('form');
@@ -42,6 +43,7 @@ class FormViewScreen extends Component {
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       );
       if (granted) {
+        this.setState({snack: true, snackText: 'File Download Starting'});
         RNFS.downloadFile({
           fromUrl:
             state.apiUrl + 'auth/getResponse?formName=' + this.form.formName,
@@ -64,7 +66,7 @@ class FormViewScreen extends Component {
         Alert.alert(
           'File Downloaded',
           'Sorry, We could not download your file! Permission Denied',
-          [{text: 'ok'}],
+          [{text: 'cancel'}],
           {cancelable: true},
         );
       }
@@ -72,7 +74,7 @@ class FormViewScreen extends Component {
       Alert.alert(
         'File Downloaded',
         'Unexpected error, please try again later!',
-        [{text: 'ok'}],
+        [{text: 'cancel'}],
         {cancelable: true},
       );
     }
@@ -92,7 +94,7 @@ class FormViewScreen extends Component {
   renderFormFields = () => {
     return this.form.fields.map((field) => {
       return (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row'}} key={field.name}>
           <Paragraph>{field.name}</Paragraph>
         </View>
       );
@@ -101,53 +103,66 @@ class FormViewScreen extends Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.formViewMainContainer}>
-        <View style={{marginBottom: 20}}>
-          <Caption>Form Name</Caption>
-          <Title>{this.form.formName}</Title>
-        </View>
-        <Divider />
-        <View style={{marginBottom: 20}}>
-          <Caption>Created On</Caption>
-          <Paragraph>{Date(this.form.createOn)}</Paragraph>
-          <Caption>Description</Caption>
-          <Paragraph>
-            {this.form.description ? this.form.description : 'Not Provided'}
-          </Paragraph>
-          <Caption>Form URL (Tap to copy)</Caption>
-          <TouchableOpacity
-            onPress={() => {
-              Clipboard.setString(this.form.url);
-              this.setState({snack: true});
-            }}>
-            <Paragraph>
-              {this.form.url ? this.form.url : 'Url not found'}
-            </Paragraph>
-          </TouchableOpacity>
+      <>
+        <ScrollView contentContainerStyle={styles.formViewMainContainer}>
+          <View style={{marginBottom: 20}}>
+            <Caption>Form Name</Caption>
+            <Title>{this.form.formName}</Title>
+          </View>
           <Divider />
-        </View>
-        <View style={{marginBottom: 20}}>
-          <Caption>Form Fields</Caption>
-          {this.renderFormFields()}
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <Button mode="contained" onPress={() => this.downloadHandler()}>
-            Download CSV
-          </Button>
-          <Button
-            mode="contained"
-            style={{backgroundColor: Colors.red700}}
-            onPress={() => this.deleteFormHandler()}>
-            Delete Form
-          </Button>
-        </View>
+          <View style={{marginBottom: 20}}>
+            <Caption>Created On</Caption>
+            <Paragraph>{Date(this.form.createOn)}</Paragraph>
+            <Caption>Description</Caption>
+            <Paragraph>
+              {this.form.description ? this.form.description : 'Not Provided'}
+            </Paragraph>
+            <Caption>Form URL (Tap to copy)</Caption>
+            <TouchableOpacity
+              onPress={() => {
+                Clipboard.setString(this.form.url);
+                this.setState({snack: true, snackText: 'Link Copied'});
+              }}>
+              <Paragraph>
+                {this.form.url ? this.form.url : 'Url not found'}
+              </Paragraph>
+            </TouchableOpacity>
+            <Divider />
+          </View>
+          <View style={{marginBottom: 20}}>
+            <Caption>Form Fields</Caption>
+            {this.renderFormFields()}
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+            <Button mode="contained" onPress={() => this.downloadHandler()}>
+              Download CSV
+            </Button>
+            <Button
+              mode="contained"
+              style={{backgroundColor: Colors.red700}}
+              onPress={() =>
+                Alert.alert(
+                  'Delete Form',
+                  'Your are about to delete a form. All response collected through that form will be deleted!',
+                  [
+                    {text: 'cancel'},
+                    {text: 'Delete', onPress: () => this.deleteFormHandler()},
+                  ],
+                  {cancelable: true},
+                )
+              }>
+              Delete Form
+            </Button>
+          </View>
+        </ScrollView>
         <Snackbar
+          style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}
           visible={this.state.snack}
           onDismiss={() => this.setState({snack: false})}>
-          Link Copied
+          {this.state.snackText}
         </Snackbar>
-      </ScrollView>
+      </>
     );
   }
 }

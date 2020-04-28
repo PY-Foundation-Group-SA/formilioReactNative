@@ -20,3 +20,11 @@ export const getData = async (key) => {
     return '';
   }
 };
+
+export const removeValue = async (key) => {
+  try {
+    await AsyncStorage.removeItem('@' + key);
+  } catch (e) {
+    console.log(e);
+  }
+};

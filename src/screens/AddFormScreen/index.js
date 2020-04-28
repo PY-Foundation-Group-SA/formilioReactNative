@@ -69,6 +69,9 @@ class AddFormScreen extends Component {
 
   removeField = (index) => {
     const {formFields} = this.state;
+    if (index === 0 && formFields.length === 1) {
+      return;
+    }
     const newFormFields = formFields.filter((field, i) => i !== index);
     this.setState({
       formFields: newFormFields,
@@ -101,6 +104,7 @@ class AddFormScreen extends Component {
     return this.regList.map((regItem) => {
       return (
         <Chip
+          key={regItem}
           selected={regItem === form.regEx ? true : false}
           style={{margin: 2}}
           onPress={() => this.setFormFields(form.name, regItem, index)}>
@@ -115,7 +119,7 @@ class AddFormScreen extends Component {
 
     return formFields.map((item, index) => {
       return (
-        <Card style={styles.mainCardContainer}>
+        <Card style={styles.mainCardContainer} key={index}>
           <Card.Title
             title={item.name === '' ? 'New Field' : item.name}
             right={() => this.renderTitleBin(index)}
@@ -125,6 +129,7 @@ class AddFormScreen extends Component {
             <TextInput
               mode="outlined"
               label="Field Name"
+              placeholder={'Field ' + (index + 1)}
               style={{
                 marginBottom: 10,
               }}
@@ -157,6 +162,7 @@ class AddFormScreen extends Component {
           <TextInput
             mode="outlined"
             label="Name your form"
+            placeholder="FormForParty"
             style={{
               marginBottom: 10,
             }}

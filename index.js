@@ -2,7 +2,7 @@
  * @format
  */
 import React from 'react';
-import {AppRegistry} from 'react-native';
+import {AppRegistry, StatusBar} from 'react-native';
 import {
   DefaultTheme,
   DarkTheme,
@@ -28,6 +28,12 @@ export default function Main() {
               settings={{
                 icon: (props) => <Icon {...props} size={24} />,
               }}>
+              <StatusBar
+                hidden={false}
+                animated={true}
+                backgroundColor={isDarkModeOn ? 'black' : 'white'}
+                barStyle={isDarkModeOn ? 'light-content' : 'dark-content'}
+              />
               <App theme={isDarkModeOn ? 'dark' : 'light'} />
             </PaperProvider>
           );
