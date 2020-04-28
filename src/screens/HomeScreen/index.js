@@ -36,16 +36,15 @@ class HomeScreen extends Component {
     this.formList = [];
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {state} = this.context;
     if (!state.apiUrl && !state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;
     } else {
-      this.fetchFormsFromDatabase();
+      await this.fetchFormsFromDatabase();
     }
     this.props.navigation.addListener('willFocus', () => {
-      console.log('Running');
       this.fetchFormsFromDatabase();
     });
   }
