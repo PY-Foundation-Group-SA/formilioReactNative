@@ -29,9 +29,11 @@ class HomeScreen extends Component {
     this.state = {
       isLoading: true,
       formList: [],
-      searchText: '',
       isListRefreshing: false,
+      search: '',
     };
+
+    this.formList = [];
   }
 
   componentDidMount() {
@@ -48,6 +50,7 @@ class HomeScreen extends Component {
     const {state} = this.context;
     try {
       const formList = await getAllForms(state.apiUrl, state.token);
+      this.formList = formList;
       this.setFormList(formList);
     } catch (err) {
       console.log('Error on getAll');
@@ -69,8 +72,19 @@ class HomeScreen extends Component {
   };
 
   setSearchText = (search) => {
+    if (search !== '') {
+      const newFormList = this.formList.filter((form, index) => {
+        return form.formName.includes(search);
+      });
+      this.setState({
+        formList: newFormList,
+        search: search,
+      });
+      return;
+    }
     this.setState({
-      searchText: search,
+      formList: this.formList,
+      search: '',
     });
   };
 
@@ -124,7 +138,7 @@ class HomeScreen extends Component {
 
   render() {
     const theme = this.context.state.theme;
-    const {searchText, formList, isListRefreshing} = this.state;
+    const {search, formList, isListRefreshing} = this.state;
 
     return (
       <View
@@ -136,8 +150,8 @@ class HomeScreen extends Component {
         ]}>
         <Searchbar
           placeholder="Search for form"
-          onChangeText={(search) => this.setSearchText(search)}
-          value={searchText}
+          onChangeText={(s) => this.setSearchText(s)}
+          value={search}
         />
         <FlatList
           style={{alignSelf: 'stretch'}}
