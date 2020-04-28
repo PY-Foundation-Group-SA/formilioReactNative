@@ -36,7 +36,6 @@ class HomeScreen extends Component {
 
   componentDidMount() {
     const {state} = this.context;
-    console.log(state.apiUrl, state.token);
     if (!state.apiUrl && !state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;

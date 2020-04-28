@@ -1,44 +1,52 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View, KeyboardAvoidingView} from 'react-native';
+import {KeyboardAvoidingView} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors, Card, FAB, TextInput, Chip} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import {HideWithKeyboard} from 'react-native-hide-with-keyboard';
+
+// importing context
+import {Context as UserContext} from '../../contexts/UserContext';
+
+// importing apiHelpers
+import {createForm} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 class AddFormScreen extends Component {
+  static contextType = UserContext;
   constructor(props) {
     super(props);
 
     this.state = {
       formFields: [
         {
-          formName: '',
+          name: '',
           regEx: '',
         },
       ],
       addFieldDisable: true,
+      formName: '',
     };
 
     this.regList = [
       'email',
-      'VIT Reg. No.',
+      'regNo',
       'alpha',
       'alphaNumeric',
       'number',
       'url',
       'username',
-      'match',
     ];
   }
 
-  setFormFields = (formName, regEx, index) => {
+  setFormFields = (name, regEx, index) => {
     const {formFields} = this.state;
-    formFields[index].formName = formName;
+    formFields[index].name = name;
     formFields[index].regEx = regEx;
-    if ([formFields[index].formName, formFields[index].regEx].includes('')) {
+    if ([formFields[index].name, formFields[index].regEx].includes('')) {
       this.setState({
         formFields,
       });
@@ -52,7 +60,7 @@ class AddFormScreen extends Component {
 
   addField = () => {
     const {formFields} = this.state;
-    formFields.push({formName: '', regEx: ''});
+    formFields.push({name: '', regEx: ''});
     this.setState({
       formFields,
       addFieldDisable: true,
@@ -65,6 +73,20 @@ class AddFormScreen extends Component {
     this.setState({
       formFields: newFormFields,
     });
+  };
+
+  createFormOnPress = () => {
+    const {formName, formFields} = this.state;
+    const {state} = this.context;
+    createForm(state.apiUrl, state.token, formName, formFields)
+      .then((isCreated) => {
+        if (isCreated) {
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => {
+        console.log('Some Error happened on Create');
+      });
   };
 
   renderTitleBin = (index) => {
@@ -81,7 +103,7 @@ class AddFormScreen extends Component {
         <Chip
           selected={regItem === form.regEx ? true : false}
           style={{margin: 2}}
-          onPress={() => this.setFormFields(form.formName, regItem, index)}>
+          onPress={() => this.setFormFields(form.name, regItem, index)}>
           {regItem}
         </Chip>
       );
@@ -95,7 +117,7 @@ class AddFormScreen extends Component {
       return (
         <Card style={styles.mainCardContainer}>
           <Card.Title
-            title={item.formName === '' ? 'New Field' : item.formName}
+            title={item.name === '' ? 'New Field' : item.name}
             right={() => this.renderTitleBin(index)}
             rightStyle={{paddingRight: 20}}
           />
@@ -106,9 +128,9 @@ class AddFormScreen extends Component {
               style={{
                 marginBottom: 10,
               }}
-              value={item.formName}
-              onChangeText={(formName) =>
-                this.setFormFields(formName, item.regEx, index)
+              value={item.name}
+              onChangeText={(name) =>
+                this.setFormFields(name, item.regEx, index)
               }
             />
           </Card.Content>
@@ -121,7 +143,7 @@ class AddFormScreen extends Component {
   };
 
   render() {
-    const {addFieldDisable} = this.state;
+    const {addFieldDisable, formName} = this.state;
 
     return (
       <KeyboardAvoidingView style={styles.addFormScreenContainer}>
@@ -132,16 +154,25 @@ class AddFormScreen extends Component {
             paddingBottom: 50,
           }}
           showsVerticalScrollIndicator={false}>
+          <TextInput
+            mode="outlined"
+            label="Name your form"
+            style={{
+              marginBottom: 10,
+            }}
+            value={formName}
+            onChangeText={(name) => this.setState({formName: name})}
+          />
           {this.renderFieldCards()}
         </ScrollView>
-        <View style={styles.addFormBottomContainer}>
+        <HideWithKeyboard style={styles.addFormBottomContainer}>
           <FAB
             style={styles.addFormButtons}
             small
             icon="check"
             label="Make Form"
-            disabled={addFieldDisable}
-            onPress={() => console.log('create clicked')}
+            disabled={addFieldDisable || this.state.formName === ''}
+            onPress={() => this.createFormOnPress()}
           />
           <FAB
             style={styles.addFormButtons}
@@ -151,7 +182,7 @@ class AddFormScreen extends Component {
             disabled={addFieldDisable}
             onPress={() => this.addField()}
           />
-        </View>
+        </HideWithKeyboard>
       </KeyboardAvoidingView>
     );
   }
