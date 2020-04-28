@@ -35,3 +35,25 @@ export const getAllForms = (apiUrl, token) => {
     }
   });
 };
+
+export const createForm = (apiUrl, token, formName, formField) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const resp = await axios.post(
+        apiUrl + 'auth/createForm',
+        {
+          formName,
+          fields: formField,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        },
+      );
+      resolve(resp.data.isFormCreated);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
