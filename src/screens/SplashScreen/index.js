@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect, useContext} from 'react';
 import {View, StyleSheet, Animated} from 'react-native';
-import {Headline} from 'react-native-paper';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -13,44 +12,50 @@ const {Value} = Animated;
 
 const SplashScreen = (props) => {
   const {state, addToken, addApiUrl, enableDarkTheme} = useContext(UserContext);
-  const start = useRef(new Value(0)).current;
+  const animationStart = useRef(new Value(0)).current;
 
   useEffect(() => {
-    start.setValue(0);
-    Animated.timing(start, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start(async () => {
+    animationStart.setValue(0);
+    async function fetchFromAsyncStorage() {
       const [token, apiUrl, theme] = await Promise.all([
         getData('TOKEN'),
         getData('API_URL'),
         getData('THEME'),
       ]);
-      if (apiUrl && token) {
-        await Promise.all([addToken(token), addApiUrl(apiUrl)]);
-      }
       // setting a theme
       theme === 'true' ? enableDarkTheme() : null;
-      Animated.timing(start, {
+      if (apiUrl && token) {
+        await Promise.all([addToken(token), addApiUrl(apiUrl)]);
+        props.navigation.navigate('HomeScreen');
+        return;
+      }
+      props.navigation.navigate('UserStartingScreen');
+    }
+    Animated.timing(animationStart, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start(() => {
+      fetchFromAsyncStorage();
+      Animated.timing(animationStart, {
         toValue: 0,
         duration: 2000,
         useNativeDriver: true,
-      }).start(() => {
-        if (state.token && state.apiUrl) {
-          props.navigation.navigate('HomeScreen');
-          return;
-        } else {
-          props.navigation.navigate('UserStartingScreen');
-          return;
-        }
-      });
+      }).start();
     });
-  }, [props.navigation, start, state, addApiUrl, addToken, enableDarkTheme]);
+  }, [
+    props.navigation,
+    animationStart,
+    state,
+    addApiUrl,
+    addToken,
+    enableDarkTheme,
+  ]);
 
   return (
     <View style={styles.viewStyles}>
-      <Animated.Text style={{opacity: start, color: 'white', fontSize: 30}}>
+      <Animated.Text
+        style={{opacity: animationStart, color: 'white', fontSize: 30}}>
         Formilio
       </Animated.Text>
     </View>

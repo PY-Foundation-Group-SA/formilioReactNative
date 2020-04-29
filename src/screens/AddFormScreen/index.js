@@ -121,7 +121,7 @@ class AddFormScreen extends Component {
       return (
         <Card style={styles.mainCardContainer} key={index} elevation={10}>
           <Card.Title
-            title={item.name === '' ? 'New Field' : item.name}
+            title={`Field ${index + 1}`}
             right={() => this.renderTitleBin(index)}
             rightStyle={{paddingRight: 20}}
           />
