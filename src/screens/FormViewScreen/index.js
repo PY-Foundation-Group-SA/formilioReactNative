@@ -1,10 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View, ScrollView, PermissionsAndroid, Alert} from 'react-native';
+import {
+  View,
+  ScrollView,
+  PermissionsAndroid,
+  Alert,
+  Linking,
+} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {
   Caption,
-  Paragraph,
   Title,
   Divider,
   Button,
@@ -136,9 +141,28 @@ class FormViewScreen extends Component {
             </Title>
           </View>
           <View style={{marginBottom: 20}}>
-            <Caption>Form URL (Tap to copy)</Caption>
+            <Caption>Form URL (Tap:Open, Long Press:Copy)</Caption>
             <TouchableOpacity
               onPress={() => {
+                if (this.form.url) {
+                  this.setState({
+                    snack: true,
+                    snackText: 'Opening Url in Browser',
+                  });
+                  Linking.openURL(this.form.url)
+                    .then(() => {
+                      console.log('linked opened');
+                    })
+                    .catch((err) => {
+                      console.log(err.message);
+                      this.setState({
+                        snack: true,
+                        snackText: 'Failed to Url',
+                      });
+                    });
+                }
+              }}
+              onLongPress={() => {
                 Clipboard.setString(this.form.url);
                 this.setState({snack: true, snackText: 'Link Copied'});
               }}>
