@@ -53,18 +53,28 @@ class FormViewScreen extends Component {
           background: true,
           discretionary: true,
           toFile: RNFS.DownloadDirectoryPath + `/${this.form.formName}.csv`,
-        }).promise.then(() => {
-          Alert.alert(
-            'File Download',
-            'Your file was successfully downloaded to your downloads folder',
-            [{text: 'ok'}],
-            {cancelable: true},
-          );
-          console.log('File Downloaded');
-        });
+        })
+          .promise.then(() => {
+            Alert.alert(
+              'File Download',
+              'Your file was successfully downloaded to your downloads folder',
+              [{text: 'ok'}],
+              {cancelable: true},
+            );
+            console.log('File Downloaded');
+          })
+          .catch((err) => {
+            console.log(err.message);
+            Alert.alert(
+              'File Downloaded',
+              'Unexpected error, please try again later!',
+              [{text: 'cancel'}],
+              {cancelable: true},
+            );
+          });
       } else {
         Alert.alert(
-          'File Downloaded',
+          'File Download',
           'Sorry, We could not download your file! Permission Denied',
           [{text: 'cancel'}],
           {cancelable: true},
@@ -95,7 +105,7 @@ class FormViewScreen extends Component {
     return this.form.fields.map((field) => {
       return (
         <View style={{flexDirection: 'row'}} key={field.name}>
-          <Paragraph>{field.name}</Paragraph>
+          <Title>{field.name}</Title>
         </View>
       );
     });
@@ -104,7 +114,12 @@ class FormViewScreen extends Component {
   render() {
     return (
       <>
-        <ScrollView contentContainerStyle={styles.formViewMainContainer}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.formViewMainContainer,
+            {backgroundColor: this.context.state.theme ? 'black' : 'white'},
+          ]}
+          showsVerticalScrollIndicator={false}>
           <View style={{marginBottom: 20}}>
             <Caption>Form Name</Caption>
             <Title>{this.form.formName}</Title>
@@ -112,49 +127,57 @@ class FormViewScreen extends Component {
           <Divider />
           <View style={{marginBottom: 20}}>
             <Caption>Created On</Caption>
-            <Paragraph>{Date(this.form.createOn)}</Paragraph>
+            <Title>{Date(this.form.createOn)}</Title>
+          </View>
+          <View style={{marginBottom: 20}}>
             <Caption>Description</Caption>
-            <Paragraph>
+            <Title>
               {this.form.description ? this.form.description : 'Not Provided'}
-            </Paragraph>
+            </Title>
+          </View>
+          <View style={{marginBottom: 20}}>
             <Caption>Form URL (Tap to copy)</Caption>
             <TouchableOpacity
               onPress={() => {
                 Clipboard.setString(this.form.url);
                 this.setState({snack: true, snackText: 'Link Copied'});
               }}>
-              <Paragraph>
-                {this.form.url ? this.form.url : 'Url not found'}
-              </Paragraph>
+              <Title>{this.form.url ? this.form.url : 'Url not found'}</Title>
             </TouchableOpacity>
-            <Divider />
           </View>
+          <Divider />
           <View style={{marginBottom: 20}}>
             <Caption>Form Fields</Caption>
             {this.renderFormFields()}
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <Button mode="contained" onPress={() => this.downloadHandler()}>
-              Download CSV
-            </Button>
-            <Button
-              mode="contained"
-              style={{backgroundColor: Colors.red700}}
-              onPress={() =>
-                Alert.alert(
-                  'Delete Form',
-                  'Your are about to delete a form. All response collected through that form will be deleted!',
-                  [
-                    {text: 'cancel'},
-                    {text: 'Delete', onPress: () => this.deleteFormHandler()},
-                  ],
-                  {cancelable: true},
-                )
-              }>
-              Delete Form
-            </Button>
-          </View>
         </ScrollView>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            paddingVertical: 10,
+            backgroundColor: 'rgba(255,255,255,0.1)',
+          }}>
+          <Button mode="contained" onPress={() => this.downloadHandler()}>
+            Download CSV
+          </Button>
+          <Button
+            mode="contained"
+            style={{backgroundColor: Colors.red700}}
+            onPress={() =>
+              Alert.alert(
+                'Delete Form',
+                'Your are about to delete a form. All response collected through that form will be deleted!',
+                [
+                  {text: 'cancel'},
+                  {text: 'Delete', onPress: () => this.deleteFormHandler()},
+                ],
+                {cancelable: true},
+              )
+            }>
+            Delete Form
+          </Button>
+        </View>
         <Snackbar
           style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}
