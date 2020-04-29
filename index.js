@@ -19,7 +19,7 @@ import {name as appName} from './app.json';
 export default function Main() {
   return (
     <UserProvider>
-      <UserContext>
+      <UserContext.Consumer>
         {(value) => {
           const isDarkModeOn = value.state.theme;
           return (
@@ -38,7 +38,7 @@ export default function Main() {
             </PaperProvider>
           );
         }}
-      </UserContext>
+      </UserContext.Consumer>
     </UserProvider>
   );
 }
