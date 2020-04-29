@@ -2,8 +2,7 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
   formViewMainContainer: {
-    flex: 1,
-    padding: 10,
+    padding: 20,
 
     display: 'flex',
     flexDirection: 'column',

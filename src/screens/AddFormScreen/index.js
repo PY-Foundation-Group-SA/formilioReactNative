@@ -119,7 +119,7 @@ class AddFormScreen extends Component {
 
     return formFields.map((item, index) => {
       return (
-        <Card style={styles.mainCardContainer} key={index}>
+        <Card style={styles.mainCardContainer} key={index} elevation={10}>
           <Card.Title
             title={item.name === '' ? 'New Field' : item.name}
             right={() => this.renderTitleBin(index)}
@@ -151,11 +151,16 @@ class AddFormScreen extends Component {
     const {addFieldDisable, formName} = this.state;
 
     return (
-      <KeyboardAvoidingView style={styles.addFormScreenContainer}>
+      <KeyboardAvoidingView
+        style={[
+          styles.addFormScreenContainer,
+          {backgroundColor: this.context.state.theme ? 'black' : 'white'},
+        ]}>
         <ScrollView
           alwaysBounceVertical={true}
           automaticallyAdjustContentInsets={true}
           contentContainerStyle={{
+            padding: 10,
             paddingBottom: 50,
           }}
           showsVerticalScrollIndicator={false}>

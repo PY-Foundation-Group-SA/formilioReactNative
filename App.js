@@ -31,6 +31,10 @@ const mainAppStack = createStackNavigator(
   },
   {
     initialRouteName: 'HomeScreen',
+    defaultNavigationOptions: {
+      animationEnabled: false,
+      animationTypeForReplace: 'pop',
+    },
   },
 );
 
