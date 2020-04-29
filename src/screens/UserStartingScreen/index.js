@@ -16,7 +16,6 @@ import DarkModeToggleSwitch from '../../components/DarkModeToggleSwitch';
 
 // importing utils
 import {connectServer} from '../../utils/apiHelpers';
-import {getData} from '../../utils/asyncStorageHelper';
 
 // importing styles
 import styles from './styles';
@@ -29,24 +28,8 @@ class UserStartingScreen extends Component {
     this.state = {
       apiUrl: 'https://formilio-backend.herokuapp.com/',
       header: 'ThisIsLiverpool',
-      isLoading: true,
+      isLoading: false,
     };
-  }
-
-  async componentDidMount() {
-    const {state} = this.context;
-    if (state.apiUrl && state.token) {
-      this.props.navigation.navigate('HomeScreen');
-    } else {
-      this.setIsLoading(false);
-    }
-  }
-
-  componentDidUpdate() {
-    const {state} = this.context;
-    if (state.apiUrl && state.token) {
-      this.props.navigation.navigate('HomeScreen');
-    }
   }
 
   setApiUrl = (apiUrl) => {
@@ -76,7 +59,7 @@ class UserStartingScreen extends Component {
       const token = await connectServer(apiUrl, header);
       await addToken(token);
       await addApiUrl(apiUrl);
-      this.setIsLoading(false);
+      this.props.navigation.navigate('HomeScreen');
     } catch (err) {
       this.setIsLoading(false);
     }
@@ -114,13 +97,13 @@ class UserStartingScreen extends Component {
             mode="outlined"
             label="Your Url"
             value={apiUrl}
-            onChangeText={(apiUrl) => this.setApiUrl(apiUrl)}
+            onChangeText={(a) => this.setApiUrl(a)}
           />
           <TextInput
             mode="outlined"
             label="Your Secret"
             value={header}
-            onChangeText={(header) => this.setHeader(header)}
+            onChangeText={(h) => this.setHeader(h)}
             style={{
               marginTop: 5,
             }}

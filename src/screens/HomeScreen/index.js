@@ -36,30 +36,35 @@ class HomeScreen extends Component {
     this.formList = [];
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {state} = this.context;
     if (!state.apiUrl && !state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;
     } else {
-      await this.fetchFormsFromDatabase();
+      this.fetchFormsFromDatabase();
     }
     this.props.navigation.addListener('willFocus', () => {
       this.fetchFormsFromDatabase();
     });
   }
 
-  fetchFormsFromDatabase = async () => {
+  fetchFormsFromDatabase = () => {
     const {state} = this.context;
-    try {
-      const formList = await getAllForms(state.apiUrl, state.token);
-      this.formList = formList;
-      this.setFormList(formList);
-    } catch (err) {
-      console.log('Error on getAll');
-    } finally {
-      this.setIsLoading(false);
-    }
+    getAllForms(state.apiUrl, state.token)
+      .then((formList) => {
+        if (formList === false) {
+          return;
+        }
+        this.formList = formList;
+        this.setFormList(formList);
+      })
+      .catch(() => {
+        console.log('####################');
+      })
+      .finally(() => {
+        this.setIsLoading(false);
+      });
   };
 
   setIsLoading = (bool) => {
