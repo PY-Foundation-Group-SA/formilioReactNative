@@ -186,6 +186,7 @@ class HomeScreen extends Component {
           onRefresh={this.onRefresh}
         />
         <Fab
+          navigation={this.props.navigation}
           onAddForm={() =>
             this.props.navigation.navigate('AddFormScreen', {
               validatorNames: this.validatorNames,
