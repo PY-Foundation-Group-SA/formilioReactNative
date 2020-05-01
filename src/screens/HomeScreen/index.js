@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View, FlatList, TouchableOpacity} from 'react-native';
+import {View, FlatList, TouchableOpacity, Alert} from 'react-native';
 import {
   ActivityIndicator,
   Text,
@@ -16,7 +16,7 @@ import {Context as UserContext} from '../../contexts/UserContext';
 import Fab from '../../components/Fab';
 
 // importing apiHelpers
-import {getAllForms} from '../../utils/apiHelpers';
+import {getAllForms, getValidate} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
@@ -32,7 +32,7 @@ class HomeScreen extends Component {
       isListRefreshing: false,
       search: '',
     };
-
+    this.validatorNames = [];
     this.formList = [];
   }
 
@@ -49,21 +49,30 @@ class HomeScreen extends Component {
     });
   }
 
-  fetchFormsFromDatabase = () => {
+  fetchFormsFromDatabase = async () => {
     const {state} = this.context;
-    getAllForms(state.apiUrl, state.token)
-      .then((formList) => {
-        if (formList === false) {
+    Promise.all([
+      getAllForms(state.apiUrl, state.token),
+      getValidate(state.apiUrl, state.token),
+    ])
+      .then((results) => {
+        const formList = results[0];
+        const v = results[1];
+        if (formList === false || v === []) {
           return;
         }
+        this.validatorNames = v;
         this.formList = formList;
         this.setFormList(formList);
       })
-      .catch(() => {
-        console.log('####################');
-      })
-      .finally(() => {
-        this.setIsLoading(false);
+      .catch((err) => {
+        console.log(err.message);
+        Alert.alert(
+          'Server Error',
+          'Could not fetch form/validation details from the server!',
+          [{text: 'Ok'}],
+          {cancelable: true},
+        );
       });
   };
 
@@ -176,7 +185,13 @@ class HomeScreen extends Component {
           refreshing={isListRefreshing}
           onRefresh={this.onRefresh}
         />
-        <Fab navigation={this.props.navigation} />
+        <Fab
+          onAddForm={() =>
+            this.props.navigation.navigate('AddFormScreen', {
+              validatorNames: this.validatorNames,
+            })
+          }
+        />
       </View>
     );
   }
