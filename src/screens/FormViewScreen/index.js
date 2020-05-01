@@ -71,7 +71,7 @@ class FormViewScreen extends Component {
           .catch((err) => {
             console.log(err.message);
             Alert.alert(
-              'File Downloaded',
+              'File Download',
               'Unexpected error, please try again later!',
               [{text: 'cancel'}],
               {cancelable: true},
