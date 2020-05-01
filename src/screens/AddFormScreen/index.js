@@ -31,15 +31,7 @@ class AddFormScreen extends Component {
       formName: '',
     };
 
-    this.regList = [
-      'email',
-      'regNo',
-      'alpha',
-      'alphaNumeric',
-      'number',
-      'url',
-      'username',
-    ];
+    this.regList = this.props.navigation.getParam('validatorNames');
   }
 
   setFormFields = (name, regEx, index) => {
@@ -102,6 +94,9 @@ class AddFormScreen extends Component {
 
   renderRegChips = (form, index) => {
     return this.regList.map((regItem) => {
+      if (regItem === 'match') {
+        return;
+      }
       return (
         <Chip
           key={regItem}
