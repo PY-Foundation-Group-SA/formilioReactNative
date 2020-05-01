@@ -47,7 +47,7 @@ class FormViewScreen extends Component {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       );
-      if (granted) {
+      if (granted === 'granted') {
         this.setState({snack: true, snackText: 'File Download Starting'});
         RNFS.downloadFile({
           fromUrl:

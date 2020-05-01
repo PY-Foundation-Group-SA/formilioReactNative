@@ -6,6 +6,7 @@ import {
   TextInput,
   Button,
   ActivityIndicator,
+  Snackbar,
 } from 'react-native-paper';
 
 // importing contexts
@@ -29,6 +30,8 @@ class UserStartingScreen extends Component {
       apiUrl: 'https://formilio-backend.herokuapp.com/',
       header: 'ThisIsLiverpool',
       isLoading: false,
+      snack: false,
+      snackText: '',
     };
   }
 
@@ -57,11 +60,23 @@ class UserStartingScreen extends Component {
 
     try {
       const token = await connectServer(apiUrl, header);
+      if (!token) {
+        this.setState({
+          isLoading: false,
+          snack: true,
+          snackText: 'Could not connect to server!',
+        });
+        return;
+      }
       await addToken(token);
       await addApiUrl(apiUrl);
       this.props.navigation.navigate('HomeScreen');
     } catch (err) {
-      this.setIsLoading(false);
+      this.setState({
+        isLoading: false,
+        snack: true,
+        snackText: 'Could not connect to server!',
+      });
     }
   };
 
@@ -117,6 +132,13 @@ class UserStartingScreen extends Component {
         <View style={styles.modeToggleContainer}>
           <DarkModeToggleSwitch />
         </View>
+        <Snackbar
+          style={{alignItems: 'center'}}
+          duration={Snackbar.DURATION_SHORT}
+          visible={this.state.snack}
+          onDismiss={() => this.setState({snack: false})}>
+          {this.state.snackText}
+        </Snackbar>
       </View>
     );
   }
