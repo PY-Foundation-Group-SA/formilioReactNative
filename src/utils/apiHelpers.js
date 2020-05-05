@@ -50,11 +50,20 @@ export const getValidate = (apiUrl, token) => {
     .catch((err) => console.error(err.message));
 };
 
-export const createForm = (apiUrl, token, formName, formField) => {
-  const json = JSON.stringify({
-    formName: formName,
-    fields: formField,
-  });
+export const createForm = (apiUrl, token, formName, formField, description) => {
+  let json;
+  if (description !== '') {
+    json = JSON.stringify({
+      formName: formName,
+      fields: formField,
+      description: description,
+    });
+  } else {
+    json = JSON.stringify({
+      formName: formName,
+      fields: formField,
+    });
+  }
   return fetch(apiUrl + 'auth/createForm', {
     method: 'POST',
     headers: {

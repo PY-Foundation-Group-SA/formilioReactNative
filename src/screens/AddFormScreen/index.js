@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {KeyboardAvoidingView} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {Colors, Card, FAB, TextInput, Chip} from 'react-native-paper';
+import {Colors, Card, FAB, TextInput, Chip, Snackbar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import {HideWithKeyboard} from 'react-native-hide-with-keyboard';
 
@@ -29,6 +29,10 @@ class AddFormScreen extends Component {
       ],
       addFieldDisable: true,
       formName: '',
+      description: '',
+
+      snack: false,
+      snackText: '',
     };
 
     this.regList = this.props.navigation.getParam('validatorNames');
@@ -71,9 +75,26 @@ class AddFormScreen extends Component {
   };
 
   createFormOnPress = () => {
-    const {formName, formFields} = this.state;
+    const {formName, formFields, description} = this.state;
     const {state} = this.context;
-    createForm(state.apiUrl, state.token, formName, formFields)
+
+    if (formName.length <= 40 || formName.length >= 6) {
+      this.setState({
+        snack: true,
+        snackText: 'Form Name should have 6-40 characters!',
+      });
+      return;
+    }
+
+    if (description.length <= 400 || description.length >= 6) {
+      this.setState({
+        snack: true,
+        snackText: 'Description should have 6-400 characters!',
+      });
+      return;
+    }
+
+    createForm(state.apiUrl, state.token, formName, formFields, description)
       .then((isCreated) => {
         if (isCreated) {
           this.props.navigation.goBack();
@@ -143,7 +164,7 @@ class AddFormScreen extends Component {
   };
 
   render() {
-    const {addFieldDisable, formName} = this.state;
+    const {addFieldDisable, formName, description} = this.state;
 
     return (
       <KeyboardAvoidingView
@@ -167,7 +188,31 @@ class AddFormScreen extends Component {
               marginBottom: 10,
             }}
             value={formName}
-            onChangeText={(name) => this.setState({formName: name})}
+            onChangeText={(name) => {
+              if (name.length > 40) {
+                return;
+              }
+              this.setState({formName: name});
+            }}
+          />
+          <TextInput
+            mode="outlined"
+            label="Description"
+            placeholder="Invitation for party!!!"
+            style={{
+              marginBottom: 10,
+            }}
+            value={description}
+            onChangeText={(desc) => {
+              if (desc.length > 400) {
+                return;
+              }
+              this.setState({description: desc});
+            }}
+            multiline={true}
+            numberOfLines={4}
+            autoCapitalize="sentences"
+            textAlignVertical="top"
           />
           {this.renderFieldCards()}
         </ScrollView>
@@ -189,6 +234,13 @@ class AddFormScreen extends Component {
             onPress={() => this.addField()}
           />
         </HideWithKeyboard>
+        <Snackbar
+          style={{alignItems: 'center'}}
+          duration={Snackbar.DURATION_SHORT}
+          visible={this.state.snack}
+          onDismiss={() => this.setState({snack: false})}>
+          {this.state.snackText}
+        </Snackbar>
       </KeyboardAvoidingView>
     );
   }
