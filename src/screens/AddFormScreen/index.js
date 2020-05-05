@@ -135,12 +135,15 @@ class AddFormScreen extends Component {
 
     return (
       <FlatList
-        style={{alignSelf: 'stretch'}}
+        style={{
+          alignSelf: 'stretch',
+          margin: 0,
+        }}
         data={formFields}
         keyExtractor={(_, index) => String(index + 1)}
         renderItem={({item, index}) => {
           return (
-            <Card style={styles.mainCardContainer} elevation={10}>
+            <Card style={styles.mainCardContainer} elevation={4}>
               <Card.Title
                 title={`Field ${index + 1}`}
                 right={() => this.renderTitleBin(index)}
