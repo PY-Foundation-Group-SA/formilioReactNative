@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {KeyboardAvoidingView} from 'react-native';
+import {KeyboardAvoidingView, FlatList} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors, Card, FAB, TextInput, Chip, Snackbar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
@@ -133,34 +133,41 @@ class AddFormScreen extends Component {
   renderFieldCards = () => {
     const {formFields} = this.state;
 
-    return formFields.map((item, index) => {
-      return (
-        <Card style={styles.mainCardContainer} key={index} elevation={10}>
-          <Card.Title
-            title={`Field ${index + 1}`}
-            right={() => this.renderTitleBin(index)}
-            rightStyle={{paddingRight: 20}}
-          />
-          <Card.Content>
-            <TextInput
-              mode="outlined"
-              label="Field Name"
-              placeholder={'Field ' + (index + 1)}
-              style={{
-                marginBottom: 10,
-              }}
-              value={item.name}
-              onChangeText={(name) =>
-                this.setFormFields(name, item.regEx, index)
-              }
-            />
-          </Card.Content>
-          <Card.Actions style={{flexWrap: 'wrap'}}>
-            {this.renderRegChips(item, index)}
-          </Card.Actions>
-        </Card>
-      );
-    });
+    return (
+      <FlatList
+        style={{alignSelf: 'stretch'}}
+        data={formFields}
+        keyExtractor={(_, index) => String(index + 1)}
+        renderItem={({item, index}) => {
+          return (
+            <Card style={styles.mainCardContainer} elevation={10}>
+              <Card.Title
+                title={`Field ${index + 1}`}
+                right={() => this.renderTitleBin(index)}
+                rightStyle={{paddingRight: 20}}
+              />
+              <Card.Content>
+                <TextInput
+                  mode="outlined"
+                  label="Field Name"
+                  placeholder={'Field ' + (index + 1)}
+                  style={{
+                    marginBottom: 10,
+                  }}
+                  value={item.name}
+                  onChangeText={(name) =>
+                    this.setFormFields(name, item.regEx, index)
+                  }
+                />
+              </Card.Content>
+              <Card.Actions style={{flexWrap: 'wrap'}}>
+                {this.renderRegChips(item, index)}
+              </Card.Actions>
+            </Card>
+          );
+        }}
+      />
+    );
   };
 
   render() {
