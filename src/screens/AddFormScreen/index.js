@@ -78,7 +78,7 @@ class AddFormScreen extends Component {
     const {formName, formFields, description} = this.state;
     const {state} = this.context;
 
-    if (formName.length <= 40 || formName.length >= 6) {
+    if (formName.length > 40 || formName.length < 6) {
       this.setState({
         snack: true,
         snackText: 'Form Name should have 6-40 characters!',
@@ -86,7 +86,7 @@ class AddFormScreen extends Component {
       return;
     }
 
-    if (description.length <= 400 || description.length >= 6) {
+    if (description.length > 400 || description.length < 6) {
       this.setState({
         snack: true,
         snackText: 'Description should have 6-400 characters!',
