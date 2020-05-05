@@ -12,6 +12,7 @@ export default StyleSheet.create({
   mainCardContainer: {
     alignSelf: 'stretch',
     marginVertical: 10,
+    marginHorizontal: 6,
   },
   addFormBottomContainer: {
     position: 'absolute',
