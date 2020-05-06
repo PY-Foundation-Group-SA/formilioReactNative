@@ -110,7 +110,7 @@ class HomeScreen extends Component {
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('FormViewScreen', {
-            form: item,
+            formName: item.formName,
           })
         }>
         <List.Item

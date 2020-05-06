@@ -15,6 +15,7 @@ import {
   Button,
   Colors,
   Snackbar,
+  ActivityIndicator,
 } from 'react-native-paper';
 import RNFS from 'react-native-fs';
 
@@ -22,7 +23,7 @@ import RNFS from 'react-native-fs';
 import {Context as UserContext} from '../../contexts/UserContext';
 
 // importing apiHelpers
-import {deleteForm} from '../../utils/apiHelpers';
+import {deleteForm, getForm} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
@@ -36,10 +37,36 @@ class FormViewScreen extends Component {
     this.state = {
       snack: false,
       snackText: '',
+      isLoading: true,
     };
 
-    this.form = this.props.navigation.getParam('form');
+    this.form = null;
   }
+
+  componentDidMount() {
+    const formName = this.props.navigation.getParam('formName');
+    this.loadForm(formName);
+  }
+
+  loadForm = async (formName) => {
+    const {state} = this.context;
+    try {
+      const form = await getForm(state.apiUrl, state.token, formName);
+      if (!form) {
+        this.setState({
+          snack: true,
+          snackText: 'We are unable to retrieve the form. Try again later!',
+        });
+      }
+      this.form = form;
+      this.setState({
+        isLoading: false,
+      });
+    } catch (err) {
+      console.error(err.message);
+      this.props.navigation.navigate('HomeScreen');
+    }
+  };
 
   downloadHandler = async () => {
     const {state} = this.context;
@@ -117,6 +144,31 @@ class FormViewScreen extends Component {
   };
 
   render() {
+    const {isLoading} = this.state;
+    const theme = this.context.state.theme;
+
+    if (isLoading) {
+      return (
+        <View
+          style={[
+            {
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'stretch',
+              zIndex: 1,
+              // paddingTop: Dimensions.get('window').height / 2 - 80,
+            },
+            {
+              backgroundColor: theme ? 'black' : 'white',
+            },
+          ]}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     return (
       <>
         <ScrollView

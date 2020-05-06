@@ -33,6 +33,24 @@ export const getAllForms = (apiUrl, token) => {
     .catch((err) => console.error(err.message));
 };
 
+export const getForm = (apiUrl, token, formName) => {
+  return fetch(apiUrl + 'auth/getForm?formName=' + formName, {
+    method: 'GET',
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      console.log(data);
+      if (data.formRetrieved) {
+        return data.form;
+      }
+      return false;
+    })
+    .catch((err) => console.error(err.message));
+};
+
 export const getValidate = (apiUrl, token) => {
   return fetch(apiUrl + 'auth/validators', {
     method: 'GET',
