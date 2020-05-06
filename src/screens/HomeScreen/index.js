@@ -115,7 +115,11 @@ class HomeScreen extends Component {
         }>
         <List.Item
           title={item.formName}
-          description="Item description"
+          description={
+            item.description.length > 40
+              ? item.description.slice(0, 40) + '...'
+              : item.description
+          }
           left={(props) => <List.Icon {...props} icon="folder" />}
         />
       </TouchableOpacity>
