@@ -19,7 +19,7 @@ const DarkModeToggleSwitch = () => {
     animateStart.setValue(0);
     Animated.timing(animateStart, {
       toValue: 1,
-      duration: 2000,
+      duration: 1000,
       useNativeDriver: true,
     }).start();
     if (state.theme) {

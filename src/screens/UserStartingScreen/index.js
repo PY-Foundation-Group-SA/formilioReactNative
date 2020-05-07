@@ -57,26 +57,26 @@ class UserStartingScreen extends Component {
     const {apiUrl, header} = this.state;
     const {addToken, addApiUrl} = this.context;
     this.setIsLoading(true);
-
+    let resp;
     try {
-      const token = await connectServer(apiUrl, header);
-      if (!token) {
-        this.setState({
+      resp = await connectServer(apiUrl, header);
+    } catch (err) {
+      console.log(err);
+      resp = {
+        statusCode: 9,
+        error: err.message,
+      };
+    } finally {
+      if (resp.statusCode !== 1) {
+        return this.setState({
           isLoading: false,
           snack: true,
-          snackText: 'Could not connect to server!',
+          snackText: resp.error,
         });
-        return;
       }
-      await addToken(token);
+      await addToken(resp.token);
       await addApiUrl(apiUrl);
-      this.props.navigation.navigate('HomeScreen');
-    } catch (err) {
-      this.setState({
-        isLoading: false,
-        snack: true,
-        snackText: 'Could not connect to server!',
-      });
+      return this.props.navigation.navigate('HomeScreen');
     }
   };
 
@@ -120,7 +120,7 @@ class UserStartingScreen extends Component {
             value={header}
             onChangeText={(h) => this.setHeader(h)}
             style={{
-              marginTop: 5,
+              marginTop: 10,
             }}
           />
         </View>

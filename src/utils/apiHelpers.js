@@ -1,19 +1,16 @@
 export const connectServer = (apiUrl, header) => {
-  return fetch(apiUrl + 'connectClient', {
-    method: 'POST',
-    headers: {
-      Authorization: header,
-    },
-    body: JSON.stringify({}),
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.payload.token) {
-        return data.payload.token;
-      }
-      return false;
+  return new Promise((resolve, reject) => {
+    fetch(apiUrl + 'connectClient', {
+      method: 'POST',
+      headers: {
+        Authorization: header,
+      },
+      body: JSON.stringify({}),
     })
-    .catch((err) => console.error(err.message));
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
 };
 
 export const getAllForms = (apiUrl, token) => {
