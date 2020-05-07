@@ -17,14 +17,16 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     zIndex: 1,
-    padding: 10,
   },
-  inputContainer: {
-    marginVertical: 20,
-    width: Dimensions.get('window').width - 40,
+  searchContainer: {
+    margin: 10,
   },
-  modeToggleContainer: {
-    position: 'absolute',
-    bottom: 10,
+  flatList: {
+    alignSelf: 'stretch',
+  },
+  Card: {
+    margin: 10,
+    maxHeight: 160,
+    overflow: 'hidden',
   },
 });

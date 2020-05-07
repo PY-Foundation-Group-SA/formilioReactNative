@@ -1,12 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View, FlatList, TouchableOpacity, Alert} from 'react-native';
+import {View, FlatList, Alert} from 'react-native';
 import {
   ActivityIndicator,
   Text,
   Searchbar,
   Divider,
-  List,
+  Card,
+  Paragraph,
 } from 'react-native-paper';
 
 // importing context
@@ -107,22 +108,23 @@ class HomeScreen extends Component {
 
   renderList = ({item, index}) => {
     return (
-      <TouchableOpacity
+      <Card
+        style={styles.Card}
+        elevation={2}
         onPress={() =>
           this.props.navigation.navigate('FormViewScreen', {
             formName: item.formName,
           })
         }>
-        <List.Item
-          title={item.formName}
-          description={
-            item.description.length > 40
-              ? item.description.slice(0, 40) + '...'
-              : item.description
-          }
-          left={(props) => <List.Icon {...props} icon="folder" />}
-        />
-      </TouchableOpacity>
+        <Card.Title title={item.formName} />
+        <Card.Content>
+          <Paragraph>
+            {item.description.length < 100
+              ? item.description
+              : item.description.slice(0, 100) + '...'}
+          </Paragraph>
+        </Card.Content>
+      </Card>
     );
   };
 
@@ -175,12 +177,13 @@ class HomeScreen extends Component {
           },
         ]}>
         <Searchbar
+          style={styles.searchContainer}
           placeholder="Search for form"
           onChangeText={(s) => this.setSearchText(s)}
           value={search}
         />
         <FlatList
-          style={{alignSelf: 'stretch'}}
+          style={styles.flatList}
           data={formList}
           keyExtractor={(item, index) => item.formName}
           renderItem={this.renderList}

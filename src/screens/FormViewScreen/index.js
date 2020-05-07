@@ -50,21 +50,25 @@ class FormViewScreen extends Component {
 
   loadForm = async (formName) => {
     const {state} = this.context;
+    let resp;
     try {
-      const form = await getForm(state.apiUrl, state.token, formName);
-      if (!form) {
-        this.setState({
-          snack: true,
-          snackText: 'We are unable to retrieve the form. Try again later!',
-        });
-      }
-      this.form = form;
-      this.setState({
-        isLoading: false,
-      });
+      resp = await getForm(state.apiUrl, state.token, formName);
     } catch (err) {
       console.error(err.message);
       this.props.navigation.navigate('HomeScreen');
+    } finally {
+      if (!resp.formRetrieved) {
+        return this.setState({
+          snack: true,
+          snackText: resp.error
+            ? resp.error
+            : 'We are unable to retrieve the form. Try again later!',
+        });
+      }
+      this.form = resp.form;
+      this.setState({
+        isLoading: false,
+      });
     }
   };
 

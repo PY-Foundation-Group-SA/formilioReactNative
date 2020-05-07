@@ -1,19 +1,16 @@
 export const connectServer = (apiUrl, header) => {
-  return fetch(apiUrl + 'connectClient', {
-    method: 'POST',
-    headers: {
-      Authorization: header,
-    },
-    body: JSON.stringify({}),
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.payload.token) {
-        return data.payload.token;
-      }
-      return false;
+  return new Promise((resolve, reject) => {
+    fetch(apiUrl + 'connectClient', {
+      method: 'POST',
+      headers: {
+        Authorization: header,
+      },
+      body: JSON.stringify({}),
     })
-    .catch((err) => console.error(err.message));
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
 };
 
 export const getAllForms = (apiUrl, token) => {
@@ -34,21 +31,17 @@ export const getAllForms = (apiUrl, token) => {
 };
 
 export const getForm = (apiUrl, token, formName) => {
-  return fetch(apiUrl + 'auth/getForm?formName=' + formName, {
-    method: 'GET',
-    headers: {
-      Authorization: token,
-    },
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      console.log(data);
-      if (data.formRetrieved) {
-        return data.form;
-      }
-      return false;
+  return new Promise((resolve, reject) => {
+    fetch(apiUrl + 'auth/getForm?formName=' + formName, {
+      method: 'GET',
+      headers: {
+        Authorization: token,
+      },
     })
-    .catch((err) => console.error(err.message));
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
 };
 
 export const getValidate = (apiUrl, token) => {
