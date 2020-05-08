@@ -169,38 +169,40 @@ class HomeScreen extends Component {
     const {search, formList, isListRefreshing} = this.state;
 
     return (
-      <View
-        style={[
-          styles.homeScreenMainContainer,
-          {
-            backgroundColor: theme ? 'black' : 'white',
-          },
-        ]}>
-        <Searchbar
-          style={styles.searchContainer}
-          placeholder="Search for form"
-          onChangeText={(s) => this.setSearchText(s)}
-          value={search}
-        />
-        <FlatList
-          style={styles.flatList}
-          data={formList}
-          keyExtractor={(item, index) => item.formName}
-          renderItem={this.renderList}
-          ItemSeparatorComponent={() => <Divider />}
-          ListEmptyComponent={this.ListEmptyComponent(theme)}
-          refreshing={isListRefreshing}
-          onRefresh={this.onRefresh}
-        />
-        <Fab
-          navigation={this.props.navigation}
-          onAddForm={() =>
-            this.props.navigation.navigate('AddFormScreen', {
-              validatorNames: this.validatorNames,
-            })
-          }
-        />
-      </View>
+      <>
+        <View
+          style={[
+            styles.homeScreenMainContainer,
+            {
+              backgroundColor: theme ? 'black' : 'white',
+            },
+          ]}>
+          <Searchbar
+            style={styles.searchContainer}
+            placeholder="Search for form"
+            onChangeText={(s) => this.setSearchText(s)}
+            value={search}
+          />
+          <FlatList
+            style={styles.flatList}
+            data={formList}
+            keyExtractor={(item, index) => item.formName}
+            renderItem={this.renderList}
+            ItemSeparatorComponent={() => <Divider />}
+            ListEmptyComponent={this.ListEmptyComponent(theme)}
+            refreshing={isListRefreshing}
+            onRefresh={this.onRefresh}
+          />
+          <Fab
+            navigation={this.props.navigation}
+            onAddForm={() =>
+              this.props.navigation.navigate('AddFormScreen', {
+                validatorNames: this.validatorNames,
+              })
+            }
+          />
+        </View>
+      </>
     );
   }
 }

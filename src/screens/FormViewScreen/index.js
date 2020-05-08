@@ -12,12 +12,13 @@ import {
   Caption,
   Title,
   Divider,
-  Button,
-  Colors,
   Snackbar,
   ActivityIndicator,
 } from 'react-native-paper';
 import RNFS from 'react-native-fs';
+
+// importing components
+import AppBar from '../../components/AppBar';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -231,33 +232,20 @@ class FormViewScreen extends Component {
             {this.renderFormFields()}
           </View>
         </ScrollView>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            paddingVertical: 10,
-            backgroundColor: 'rgba(255,255,255,0.1)',
-          }}>
-          <Button mode="contained" onPress={() => this.downloadHandler()}>
-            Download CSV
-          </Button>
-          <Button
-            mode="contained"
-            style={{backgroundColor: Colors.red700}}
-            onPress={() =>
-              Alert.alert(
-                'Delete Form',
-                'Your are about to delete a form. All response collected through that form will be deleted!',
-                [
-                  {text: 'cancel'},
-                  {text: 'Delete', onPress: () => this.deleteFormHandler()},
-                ],
-                {cancelable: true},
-              )
-            }>
-            Delete Form
-          </Button>
-        </View>
+        <AppBar
+          downloadHandler={this.downloadHandler}
+          deleteFormHandler={() =>
+            Alert.alert(
+              'Delete Form',
+              'Your are about to delete a form. All response collected through that form will be deleted!',
+              [
+                {text: 'cancel'},
+                {text: 'Delete', onPress: () => this.deleteFormHandler()},
+              ],
+              {cancelable: true},
+            )
+          }
+        />
         <Snackbar
           style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}

@@ -25,7 +25,7 @@ const mainAppStack = createStackNavigator(
     FormViewScreen: {
       screen: FormViewScreen,
       navigationOptions: {
-        title: '',
+        title: 'Your Form',
       },
     },
   },
