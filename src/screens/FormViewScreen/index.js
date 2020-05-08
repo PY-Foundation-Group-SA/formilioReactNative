@@ -245,6 +245,7 @@ class FormViewScreen extends Component {
               {cancelable: true},
             )
           }
+          goBack={this.props.navigation.goBack}
         />
         <Snackbar
           style={{alignItems: 'center'}}

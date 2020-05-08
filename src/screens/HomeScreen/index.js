@@ -8,6 +8,7 @@ import {
   Divider,
   Card,
   Paragraph,
+  Headline,
 } from 'react-native-paper';
 
 // importing context
@@ -177,6 +178,15 @@ class HomeScreen extends Component {
               backgroundColor: theme ? 'black' : 'white',
             },
           ]}>
+          <Headline
+            style={{
+              alignSelf: 'flex-start',
+              marginTop: 20,
+              fontSize: 28,
+              marginLeft: 20,
+            }}>
+            Formilio
+          </Headline>
           <Searchbar
             style={styles.searchContainer}
             placeholder="Search for form"
