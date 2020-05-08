@@ -19,7 +19,6 @@
     "react-native": "0.62.2",
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.6.1",
-    "react-native-hide-with-keyboard": "^1.2.1",
     "react-native-paper": "^3.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.7.0",

@@ -1,10 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {KeyboardAvoidingView, FlatList} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import {Colors, Card, FAB, TextInput, Chip, Snackbar} from 'react-native-paper';
+import {View} from 'react-native';
+import {Snackbar, ActivityIndicator} from 'react-native-paper';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
-import {HideWithKeyboard} from 'react-native-hide-with-keyboard';
+
+// importing components
+import FormStarting from '../../components/FormStarting';
+import FormFieldInput from '../../components/FormFieldInput';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -27,30 +30,24 @@ class AddFormScreen extends Component {
           regEx: '',
         },
       ],
-      addFieldDisable: true,
       formName: '',
       description: '',
 
       snack: false,
       snackText: '',
+      isLoading: false,
     };
 
     this.regList = this.props.navigation.getParam('validatorNames');
   }
 
-  setFormFields = (name, regEx, index) => {
+  setFormFields = (name, regEx) => {
     const {formFields} = this.state;
+    const index = formFields.length - 1;
     formFields[index].name = name;
     formFields[index].regEx = regEx;
-    if ([formFields[index].name, formFields[index].regEx].includes('')) {
-      this.setState({
-        formFields,
-      });
-      return;
-    }
     this.setState({
       formFields,
-      addFieldDisable: false,
     });
   };
 
@@ -63,23 +60,16 @@ class AddFormScreen extends Component {
     });
   };
 
-  removeField = (index) => {
-    const {formFields} = this.state;
-    if (index === 0 && formFields.length === 1) {
-      return;
-    }
-    const newFormFields = formFields.filter((field, i) => i !== index);
-    this.setState({
-      formFields: newFormFields,
-    });
-  };
-
   createFormOnPress = () => {
+    this.setState({
+      isLoading: true,
+    });
     const {formName, formFields, description} = this.state;
     const {state} = this.context;
 
     if (formName.length > 40 || formName.length < 6) {
       this.setState({
+        isLoading: false,
         snack: true,
         snackText: 'Form Name should have 6-40 characters!',
       });
@@ -88,6 +78,7 @@ class AddFormScreen extends Component {
 
     if (description.length > 400 || description.length < 6) {
       this.setState({
+        isLoading: false,
         snack: true,
         snackText: 'Description should have 6-400 characters!',
       });
@@ -105,153 +96,108 @@ class AddFormScreen extends Component {
       });
   };
 
-  renderTitleBin = (index) => {
-    return (
-      <TouchableOpacity onPress={() => this.removeField(index)}>
-        <Icon color={Colors.red700} name="trash" size={24} />
-      </TouchableOpacity>
-    );
-  };
-
-  renderRegChips = (form, index) => {
-    return this.regList.map((regItem) => {
-      if (regItem === 'match') {
-        return;
-      }
-      return (
-        <Chip
-          key={regItem}
-          selected={regItem === form.regEx ? true : false}
-          style={{margin: 2}}
-          onPress={() => this.setFormFields(form.name, regItem, index)}>
-          {regItem}
-        </Chip>
-      );
+  setFormName = (formName) => {
+    this.setState({
+      formName,
     });
   };
 
-  renderFieldCards = () => {
-    const {formFields} = this.state;
+  setFormDescription = (description) => {
+    this.setState({
+      description,
+    });
+  };
 
+  getFormName = () => {
     return (
-      <FlatList
-        style={{
-          alignSelf: 'stretch',
-          margin: 0,
-        }}
-        data={formFields}
-        keyExtractor={(_, index) => String(index + 1)}
-        renderItem={({item, index}) => {
-          return (
-            <Card style={styles.mainCardContainer} elevation={4}>
-              <Card.Title
-                title={`Field ${index + 1}`}
-                right={() => this.renderTitleBin(index)}
-                rightStyle={{paddingRight: 20}}
-              />
-              <Card.Content>
-                <TextInput
-                  mode="outlined"
-                  label="Field Name"
-                  placeholder={'Field ' + (index + 1)}
-                  style={{
-                    marginBottom: 10,
-                  }}
-                  value={item.name}
-                  onChangeText={(name) =>
-                    this.setFormFields(name, item.regEx, index)
-                  }
-                />
-              </Card.Content>
-              <Card.Actions style={{flexWrap: 'wrap'}}>
-                {this.renderRegChips(item, index)}
-              </Card.Actions>
-            </Card>
-          );
-        }}
+      <FormStarting
+        title="Let's start with Form Name"
+        onSubmitEditing={this.setFormName}
+        placeholder="Your Form Name"
+        minMax={[6, 40]}
       />
     );
   };
 
+  getFormDescription = () => {
+    return (
+      <FormStarting
+        title="Help Your Customers Know What's the Form About"
+        onSubmitEditing={this.setFormDescription}
+        placeholder="Form Description"
+        minMax={[6, 400]}
+      />
+    );
+  };
+
+  getFormFields = () => {
+    return (
+      <FormFieldInput
+        theme={this.context.state.theme}
+        regularExpressions={this.regList}
+        setFormFields={this.setFormFields}
+        addField={this.addField}
+        createForm={this.createFormOnPress}
+        placeholder="Field Name"
+      />
+    );
+  };
+
+  renderFormHandler = () => {
+    const {formName, description} = this.state;
+
+    if (!formName) {
+      return this.getFormName();
+    }
+
+    if (!description) {
+      return this.getFormDescription();
+    }
+
+    return this.getFormFields();
+  };
+
   render() {
-    const {addFieldDisable, formName, description} = this.state;
+    const {isLoading} = this.state;
+
+    if (isLoading) {
+      return (
+        <View
+          style={[
+            styles.addFormScreenContainer,
+            {backgroundColor: this.context.state.theme ? 'black' : 'white'},
+          ]}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
 
     return (
-      <KeyboardAvoidingView
-        style={[
-          styles.addFormScreenContainer,
-          {backgroundColor: this.context.state.theme ? 'black' : 'white'},
-        ]}>
-        <ScrollView
-          alwaysBounceVertical={true}
-          automaticallyAdjustContentInsets={true}
-          contentContainerStyle={{
-            padding: 10,
-            paddingBottom: 50,
-          }}
-          showsVerticalScrollIndicator={false}>
-          <TextInput
-            mode="outlined"
-            label="Name your form"
-            placeholder="FormForParty"
-            style={{
-              marginBottom: 10,
-            }}
-            value={formName}
-            onChangeText={(name) => {
-              if (name.length > 40) {
-                return;
-              }
-              this.setState({formName: name});
-            }}
-          />
-          <TextInput
-            mode="outlined"
-            label="Description"
-            placeholder="Invitation for party!!!"
-            style={{
-              marginBottom: 10,
-            }}
-            value={description}
-            onChangeText={(desc) => {
-              if (desc.length > 400) {
-                return;
-              }
-              this.setState({description: desc});
-            }}
-            multiline={true}
-            numberOfLines={4}
-            autoCapitalize="sentences"
-            textAlignVertical="top"
-          />
-          {this.renderFieldCards()}
-        </ScrollView>
-        <HideWithKeyboard style={styles.addFormBottomContainer}>
-          <FAB
-            style={styles.addFormButtons}
-            small
-            icon="check"
-            label="Make Form"
-            disabled={addFieldDisable || this.state.formName === ''}
-            onPress={() => this.createFormOnPress()}
-          />
-          <FAB
-            style={styles.addFormButtons}
-            small
-            icon="plus"
-            label="Add Field"
-            disabled={addFieldDisable}
-            onPress={() => this.addField()}
-          />
-        </HideWithKeyboard>
-        <Snackbar
-          style={{alignItems: 'center'}}
-          duration={Snackbar.DURATION_SHORT}
-          visible={this.state.snack}
-          onDismiss={() => this.setState({snack: false})}>
-          {this.state.snackText}
-        </Snackbar>
-      </KeyboardAvoidingView>
+      <>
+        <View
+          style={[
+            styles.addFormScreenContainer,
+            {backgroundColor: this.context.state.theme ? 'black' : 'white'},
+          ]}>
+          <View style={styles.goBackButtonContainer}>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+              <Icon
+                name="x"
+                size={24}
+                color={this.context.state.theme ? 'white' : 'black'}
+              />
+            </TouchableOpacity>
+          </View>
+          {this.renderFormHandler()}
+          <Snackbar
+            style={{alignItems: 'center'}}
+            duration={Snackbar.DURATION_SHORT}
+            visible={this.state.snack}
+            onDismiss={() => this.setState({snack: false})}>
+            {this.state.snackText}
+          </Snackbar>
+        </View>
+      </>
     );
   }
 }

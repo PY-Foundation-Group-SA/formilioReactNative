@@ -3,27 +3,14 @@ import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
   addFormScreenContainer: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1,
   },
-  mainCardContainer: {
-    alignSelf: 'stretch',
-    marginVertical: 10,
-    marginHorizontal: 6,
-  },
-  addFormBottomContainer: {
+  goBackButtonContainer: {
     position: 'absolute',
-    bottom: 10,
-    zIndex: 10,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'stretch',
-  },
-  addFormButtons: {
-    marginHorizontal: 5,
+    top: 20,
+    right: 20,
+    alignSelf: 'flex-end',
+    zIndex: 4,
   },
 });

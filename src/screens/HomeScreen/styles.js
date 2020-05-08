@@ -1,5 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
+const {width, height} = Dimensions.get('window');
+
 export default StyleSheet.create({
   homeScreenLoaderContainer: {
     flex: 1,
@@ -8,7 +10,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     zIndex: 1,
-    paddingTop: Dimensions.get('window').height / 2 - 80,
+    paddingTop: height / 2 - 80,
   },
   homeScreenMainContainer: {
     flex: 1,

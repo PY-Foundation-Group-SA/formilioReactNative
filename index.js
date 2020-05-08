@@ -8,7 +8,6 @@ import {
   DarkTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Feather';
 import {
   Provider as UserProvider,
   Context as UserContext,
@@ -23,12 +22,9 @@ export default function Main() {
         {(value) => {
           const isDarkModeOn = value.state.theme;
           return (
-            <PaperProvider
-              theme={isDarkModeOn ? DarkTheme : DefaultTheme}
-              settings={{
-                icon: (props) => <Icon {...props} size={24} />,
-              }}>
+            <PaperProvider theme={isDarkModeOn ? DarkTheme : DefaultTheme}>
               <StatusBar
+                translucent={false}
                 hidden={false}
                 animated={true}
                 backgroundColor={isDarkModeOn ? 'black' : 'white'}

@@ -12,21 +12,12 @@ const mainAppStack = createStackNavigator(
   {
     HomeScreen: {
       screen: HomeScreen,
-      navigationOptions: {
-        title: 'Formilio',
-      },
     },
     AddFormScreen: {
       screen: AddFormScreen,
-      navigationOptions: {
-        title: 'Add Form',
-      },
     },
     FormViewScreen: {
       screen: FormViewScreen,
-      navigationOptions: {
-        title: '',
-      },
     },
   },
   {
@@ -34,6 +25,7 @@ const mainAppStack = createStackNavigator(
     defaultNavigationOptions: {
       animationEnabled: false,
       animationTypeForReplace: 'pop',
+      header: () => null,
     },
   },
 );
