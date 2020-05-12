@@ -75,20 +75,6 @@ export const getValidate = (token) => {
     .catch((err) => console.error(err.message));
 };
 
-export const getForm = (token, fid) => {
-  return new Promise((resolve, reject) => {
-    fetch(API_URL + 'auth/getForm?fid=' + fid, {
-      method: 'GET',
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => resolve(data))
-      .catch((err) => reject(err));
-  });
-};
-
 export const createForm = (token, formName, formField, description) => {
   let json;
   if (description !== '') {
@@ -120,6 +106,20 @@ export const createForm = (token, formName, formField, description) => {
       return false;
     })
     .catch((err) => console.error(err.message));
+};
+
+export const getForm = (token, fid) => {
+  return new Promise((resolve, reject) => {
+    fetch(API_URL + 'auth/getForm?fid=' + fid, {
+      method: 'GET',
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
 };
 
 export const deleteForm = (token, fid) => {
