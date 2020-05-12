@@ -12,6 +12,5 @@ script:
   - yarn lint
   - yarn build-t
 after_success:
-  if: branch = master
   - chmod +x ./upload-apk.sh
   - ./upload-apk.sh 
