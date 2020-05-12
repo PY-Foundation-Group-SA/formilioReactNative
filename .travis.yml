@@ -1,13 +1,17 @@
 language: android
 before_install: #1.1
-- nvm install 12
-- node --version
+  - nvm install 12
+  - node --version
 install:
-- yarn
+  - yarn
 android:
   components:
   - build-tools-28.0.3
   - android-28
 script: 
-- yarn lint
-- yarn build-t
+  - yarn lint
+  - yarn build-t
+after_success:
+  if: branch = master
+  - chmod +x ./upload-apk.sh
+  - ./upload-apk.sh 
