@@ -32,15 +32,15 @@ class Fab extends Component {
   };
 
   onDisconnectServer = async () => {
-    const {removeApiUrl, removeToken} = this.context;
+    const {removeToken} = this.context;
     Alert.alert(
-      'Disconnect Server',
-      'You are about to disconnect from this server!',
+      'Log Out',
+      'You are sure you want to log out?',
       [
         {
-          text: 'continue',
+          text: 'Log Out',
           onPress: async () => {
-            await Promise.all([removeApiUrl(), removeToken()]);
+            await removeToken();
             this.props.navigation.navigate('UserStartingScreen');
           },
         },
@@ -81,7 +81,7 @@ class Fab extends Component {
                   icon: ({size}) => {
                     return <Icon name="server" size={size} />;
                   },
-                  label: 'Disconnect Server',
+                  label: 'Log Out',
                   onPress: this.onDisconnectServer,
                 },
               ]}

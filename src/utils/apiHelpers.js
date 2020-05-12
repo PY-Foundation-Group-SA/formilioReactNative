@@ -1,11 +1,19 @@
-export const connectServer = (apiUrl, header) => {
+import {API_URL} from 'react-native-dotenv';
+import {Base64} from 'js-base64';
+
+export const signUpUser = (email, password) => {
+  const encodedPass = Base64.encode(password);
+  const body = JSON.stringify({
+    email,
+    password: encodedPass,
+  });
   return new Promise((resolve, reject) => {
-    fetch(apiUrl + 'connectClient', {
+    fetch(API_URL + 'createUser', {
       method: 'POST',
       headers: {
-        Authorization: header,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({}),
+      body: body,
     })
       .then((resp) => resp.json())
       .then((data) => resolve(data))
@@ -13,8 +21,28 @@ export const connectServer = (apiUrl, header) => {
   });
 };
 
-export const getAllForms = (apiUrl, token) => {
-  return fetch(apiUrl + 'auth/getAllForm', {
+export const loginUser = (email, password) => {
+  const encodedPass = Base64.encode(password);
+  const body = JSON.stringify({
+    email,
+    password: encodedPass,
+  });
+  return new Promise((resolve, reject) => {
+    fetch(API_URL + 'signInUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    })
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
+};
+
+export const getAllForms = (token) => {
+  return fetch(API_URL + 'auth/getAllForm', {
     method: 'GET',
     headers: {
       Authorization: token,
@@ -26,6 +54,23 @@ export const getAllForms = (apiUrl, token) => {
         return data.payload.forms;
       }
       return false;
+    })
+    .catch((err) => console.error(err.message));
+};
+
+export const getValidate = (token) => {
+  return fetch(API_URL + 'auth/validators', {
+    method: 'GET',
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      if (data.payload.validatorNames) {
+        return data.payload.validatorNames;
+      }
+      return [];
     })
     .catch((err) => console.error(err.message));
 };
@@ -42,23 +87,6 @@ export const getForm = (apiUrl, token, formName) => {
       .then((data) => resolve(data))
       .catch((err) => reject(err));
   });
-};
-
-export const getValidate = (apiUrl, token) => {
-  return fetch(apiUrl + 'auth/validators', {
-    method: 'GET',
-    headers: {
-      Authorization: token,
-    },
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (data.payload.validatorNames) {
-        return data.payload.validatorNames;
-      }
-      return [];
-    })
-    .catch((err) => console.error(err.message));
 };
 
 export const createForm = (apiUrl, token, formName, formField, description) => {

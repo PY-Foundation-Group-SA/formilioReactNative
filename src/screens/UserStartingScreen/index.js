@@ -16,7 +16,7 @@ import {Context as UserContext} from '../../contexts/UserContext';
 import DarkModeToggleSwitch from '../../components/DarkModeToggleSwitch';
 
 // importing utils
-import {connectServer} from '../../utils/apiHelpers';
+import {loginUser, signUpUser} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
@@ -53,6 +53,10 @@ class UserStartingScreen extends Component {
   }
 
   componentDidMount() {
+    this.animateScreenIn();
+  }
+
+  animateScreenIn = () => {
     Animated.timing(this.onStartAnimation, {
       toValue: 1,
       duration: 1000,
@@ -98,10 +102,10 @@ class UserStartingScreen extends Component {
 
   onLogin = async () => {
     const {email, password} = this.state;
-    const {addToken, addApiUrl} = this.context;
+    const {addToken} = this.context;
     let resp;
     try {
-      resp = await connectServer(email, password);
+      resp = await loginUser(email, password);
     } catch (err) {
       console.log(err);
       resp = {
@@ -109,6 +113,7 @@ class UserStartingScreen extends Component {
         error: err.message,
       };
     } finally {
+      this.animateScreenIn();
       if (resp.statusCode !== 1) {
         return this.setState({
           isLoading: false,
@@ -116,11 +121,38 @@ class UserStartingScreen extends Component {
           snackText: resp.error,
         });
       }
-      await addToken(resp.token);
-      await addApiUrl(email);
+      await addToken(resp.payload.signInToken);
       return this.props.navigation.navigate('HomeScreen');
     }
-  }
+  };
+
+  onSignUp = async () => {
+    const {email, password} = this.state;
+    let resp;
+    try {
+      resp = await signUpUser(email, password);
+    } catch (err) {
+      console.log(err);
+      resp = {
+        statusCode: 9,
+        error: err.message,
+      };
+    } finally {
+      this.animateScreenIn();
+      if (resp.statusCode !== 1 || !resp.isUserCreated) {
+        return this.setState({
+          isLoading: false,
+          snack: true,
+          snackText: resp.error,
+        });
+      }
+      this.setState({
+        isLoading: false,
+        snack: true,
+        snackText: 'User Created, we have sent a confirmation mail',
+      });
+    }
+  };
 
   onPress = async () => {
     const {isOnLogin} = this.state;
@@ -129,7 +161,7 @@ class UserStartingScreen extends Component {
     if (isOnLogin) {
       this.onLogin();
     } else {
-      console.log('Sign Up clicked');
+      this.onSignUp();
     }
   };
 
