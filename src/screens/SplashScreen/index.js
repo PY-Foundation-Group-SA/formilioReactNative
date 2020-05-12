@@ -11,21 +11,20 @@ import {getData} from '../../utils/asyncStorageHelper';
 const {Value} = Animated;
 
 const SplashScreen = (props) => {
-  const {state, addToken, addApiUrl, enableDarkTheme} = useContext(UserContext);
+  const {state, addToken, enableDarkTheme} = useContext(UserContext);
   const animationStart = useRef(new Value(0)).current;
 
   useEffect(() => {
     animationStart.setValue(0);
     async function fetchFromAsyncStorage() {
-      const [token, apiUrl, theme] = await Promise.all([
+      const [token, theme] = await Promise.all([
         getData('TOKEN'),
-        getData('API_URL'),
         getData('THEME'),
       ]);
       // setting a theme
       theme === 'true' ? enableDarkTheme() : null;
-      if (apiUrl && token) {
-        await Promise.all([addToken(token), addApiUrl(apiUrl)]);
+      if (token) {
+        await addToken(token);
         props.navigation.navigate('HomeScreen');
         return;
       }
@@ -43,14 +42,7 @@ const SplashScreen = (props) => {
         useNativeDriver: true,
       }).start();
     });
-  }, [
-    props.navigation,
-    animationStart,
-    state,
-    addApiUrl,
-    addToken,
-    enableDarkTheme,
-  ]);
+  }, [props.navigation, animationStart, state, addToken, enableDarkTheme]);
 
   return (
     <View style={styles.viewStyles}>

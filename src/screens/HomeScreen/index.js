@@ -40,7 +40,7 @@ class HomeScreen extends Component {
 
   componentDidMount() {
     const {state} = this.context;
-    if (!state.apiUrl && !state.token) {
+    if (!state.token) {
       this.props.navigation.navigate('UserStartingScreen');
       return;
     } else {
@@ -53,19 +53,15 @@ class HomeScreen extends Component {
 
   fetchFormsFromDatabase = async () => {
     const {state} = this.context;
-    Promise.all([
-      getAllForms(state.apiUrl, state.token),
-      getValidate(state.apiUrl, state.token),
-    ])
-      .then((results) => {
-        const formList = results[0];
-        const v = results[1];
+    Promise.all([getAllForms(state.token), getValidate(state.token)])
+      .then(([formList, v]) => {
         if (formList === false || v === []) {
           return;
         }
         this.validatorNames = v;
         this.formList = formList;
         this.setFormList(formList);
+        this.setIsLoading(false);
       })
       .catch((err) => {
         console.log(err.message);
