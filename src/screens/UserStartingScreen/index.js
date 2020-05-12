@@ -21,7 +21,7 @@ import {loginUser, signUpUser} from '../../utils/apiHelpers';
 // importing styles
 import styles from './styles';
 
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 class UserStartingScreen extends Component {
   static contextType = UserContext;
@@ -62,7 +62,7 @@ class UserStartingScreen extends Component {
       duration: 1000,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   setEmail = (email) => {
     this.setState({

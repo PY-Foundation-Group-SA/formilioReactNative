@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useContext, useRef} from 'react';
 import {View, StyleSheet, Animated} from 'react-native';
-import {Switch, Text} from 'react-native-paper';
+import {Switch} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
 // importing context for theme preference
