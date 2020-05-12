@@ -12,7 +12,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
 
   cd formilioReactNative
   git checkout -b build
-  rm -rf ./*
+  rm -rf ./* .*
   cp -Rf $HOME/buildApk/* .
   git add .
   git remote add origin https://sarthakpranesh:$GITHUB_API_KEY@github.com/sarthakpranesh/formilioReactNative.git
