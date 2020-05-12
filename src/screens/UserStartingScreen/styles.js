@@ -9,6 +9,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     zIndex: 1,
   },
+  screenSwitcherStarting: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
   inputContainer: {
     marginVertical: 20,
     width: Dimensions.get('window').width - 40,

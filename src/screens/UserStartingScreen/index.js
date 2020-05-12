@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Animated, Dimensions} from 'react-native';
 import {
   Headline,
   TextInput,
@@ -21,29 +21,54 @@ import {connectServer} from '../../utils/apiHelpers';
 // importing styles
 import styles from './styles';
 
+const {width, height} = Dimensions.get('window');
+
 class UserStartingScreen extends Component {
   static contextType = UserContext;
   constructor(props) {
     super(props);
 
     this.state = {
-      apiUrl: 'https://formilio-backend.herokuapp.com/',
-      header: 'ThisIsLiverpool',
+      email: '',
+      password: '',
       isLoading: false,
       snack: false,
       snackText: '',
+      isOnLogin: true,
     };
+
+    this.onStartAnimation = new Animated.Value(0);
+    this.screenLoadingOpacity = this.onStartAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    });
+    this.headerTransition = this.onStartAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-height / 2, 0],
+    });
+    this.buttonTransition = this.onStartAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [height / 2, 0],
+    });
   }
 
-  setApiUrl = (apiUrl) => {
+  componentDidMount() {
+    Animated.timing(this.onStartAnimation, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  setEmail = (email) => {
     this.setState({
-      apiUrl,
+      email,
     });
   };
 
-  setHeader = (header) => {
+  setPassword = (password) => {
     this.setState({
-      header,
+      password,
     });
   };
 
@@ -53,13 +78,30 @@ class UserStartingScreen extends Component {
     });
   };
 
-  onPress = async () => {
-    const {apiUrl, header} = this.state;
+  toggleScreen = () => {
+    const {isOnLogin} = this.state;
+    Animated.timing(this.onStartAnimation, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => {
+      this.setState({
+        isOnLogin: !isOnLogin,
+      });
+      Animated.timing(this.onStartAnimation, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  onLogin = async () => {
+    const {email, password} = this.state;
     const {addToken, addApiUrl} = this.context;
-    this.setIsLoading(true);
     let resp;
     try {
-      resp = await connectServer(apiUrl, header);
+      resp = await connectServer(email, password);
     } catch (err) {
       console.log(err);
       resp = {
@@ -75,14 +117,25 @@ class UserStartingScreen extends Component {
         });
       }
       await addToken(resp.token);
-      await addApiUrl(apiUrl);
+      await addApiUrl(email);
       return this.props.navigation.navigate('HomeScreen');
+    }
+  }
+
+  onPress = async () => {
+    const {isOnLogin} = this.state;
+    this.setIsLoading(true);
+
+    if (isOnLogin) {
+      this.onLogin();
+    } else {
+      console.log('Sign Up clicked');
     }
   };
 
   render() {
     const theme = this.context.state.theme;
-    const {isLoading, apiUrl, header} = this.state;
+    const {isLoading, isOnLogin, email, password} = this.state;
 
     if (isLoading) {
       return (
@@ -99,39 +152,68 @@ class UserStartingScreen extends Component {
     }
 
     return (
-      <View
-        style={[
-          styles.userStartingContainer,
-          {
-            backgroundColor: theme ? 'black' : 'white',
-          },
-        ]}>
-        <Headline>Enter Your Server URL</Headline>
-        <View style={styles.inputContainer}>
-          <TextInput
-            mode="outlined"
-            label="Your Url"
-            value={apiUrl}
-            onChangeText={(a) => this.setApiUrl(a)}
-          />
-          <TextInput
-            mode="outlined"
-            label="Your Secret"
-            value={header}
-            onChangeText={(h) => this.setHeader(h)}
-            style={{
-              marginTop: 10,
-            }}
-          />
-        </View>
-        <View>
-          <Button mode="contained" loading={false} onPress={this.onPress}>
-            Connect Server
+      <>
+        <Animated.View
+          style={[
+            styles.userStartingContainer,
+            {
+              backgroundColor: theme ? 'black' : 'white',
+            },
+          ]}>
+          <Button
+            style={[
+              styles.screenSwitcherStarting,
+              {
+                opacity: this.screenLoadingOpacity,
+              },
+            ]}
+            onPress={() => this.toggleScreen()}>
+            {isOnLogin ? 'Sign Up' : 'Login'}
           </Button>
-        </View>
-        <View style={styles.modeToggleContainer}>
-          <DarkModeToggleSwitch />
-        </View>
+          <Animated.View
+            style={{
+              opacity: this.screenLoadingOpacity,
+              transform: [{translateY: this.headerTransition}],
+            }}>
+            <Headline>
+              {isOnLogin ? 'Login To Formilio' : 'Join Formilio'}
+            </Headline>
+          </Animated.View>
+          <Animated.View
+            style={[
+              styles.inputContainer,
+              {
+                opacity: this.screenLoadingOpacity,
+              },
+            ]}>
+            <TextInput
+              mode="outlined"
+              label="Email Id"
+              value={email}
+              onChangeText={(a) => this.setEmail(a)}
+            />
+            <TextInput
+              mode="outlined"
+              label="Password"
+              value={password}
+              onChangeText={(h) => this.setPassword(h)}
+              style={{
+                marginTop: 10,
+              }}
+            />
+          </Animated.View>
+          <Animated.View
+            style={{
+              transform: [{translateY: this.buttonTransition}],
+            }}>
+            <Button mode="contained" loading={false} onPress={this.onPress}>
+              {isOnLogin ? 'Login' : 'Sign Up'}
+            </Button>
+          </Animated.View>
+          <View style={styles.modeToggleContainer}>
+            <DarkModeToggleSwitch />
+          </View>
+        </Animated.View>
         <Snackbar
           style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}
@@ -139,7 +221,7 @@ class UserStartingScreen extends Component {
           onDismiss={() => this.setState({snack: false})}>
           {this.state.snackText}
         </Snackbar>
-      </View>
+      </>
     );
   }
 }
