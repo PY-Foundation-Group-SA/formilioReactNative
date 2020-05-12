@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
+import {API_URL} from 'react-native-dotenv';
 import {
   View,
   ScrollView,
@@ -45,15 +46,15 @@ class FormViewScreen extends Component {
   }
 
   componentDidMount() {
-    const formName = this.props.navigation.getParam('formName');
-    this.loadForm(formName);
+    const fid = this.props.navigation.getParam('fid');
+    this.loadForm(fid);
   }
 
-  loadForm = async (formName) => {
+  loadForm = async (fid) => {
     const {state} = this.context;
     let resp;
     try {
-      resp = await getForm(state.apiUrl, state.token, formName);
+      resp = await getForm(state.token, fid);
     } catch (err) {
       console.error(err.message);
       this.props.navigation.navigate('HomeScreen');
@@ -82,8 +83,7 @@ class FormViewScreen extends Component {
       if (granted === 'granted') {
         this.setState({snack: true, snackText: 'File Download Starting'});
         RNFS.downloadFile({
-          fromUrl:
-            state.apiUrl + 'auth/getResponse?formName=' + this.form.formName,
+          fromUrl: API_URL + 'auth/getResponse?fid=' + this.form._id,
           headers: {
             Authorization: state.token,
           },
@@ -129,7 +129,7 @@ class FormViewScreen extends Component {
 
   deleteFormHandler = () => {
     const {state} = this.context;
-    deleteForm(state.apiUrl, state.token, this.form.formName)
+    deleteForm(state.token, this.form._id)
       .then(() => {
         this.props.navigation.navigate('HomeScreen');
       })

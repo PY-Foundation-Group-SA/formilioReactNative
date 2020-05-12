@@ -105,7 +105,7 @@ class UserStartingScreen extends Component {
     const {addToken} = this.context;
     let resp;
     try {
-      resp = await loginUser(email, password);
+      resp = await loginUser(email.toLowerCase(), password);
     } catch (err) {
       console.log(err);
       resp = {
@@ -130,7 +130,7 @@ class UserStartingScreen extends Component {
     const {email, password} = this.state;
     let resp;
     try {
-      resp = await signUpUser(email, password);
+      resp = await signUpUser(email.toLowerCase(), password);
     } catch (err) {
       console.log(err);
       resp = {

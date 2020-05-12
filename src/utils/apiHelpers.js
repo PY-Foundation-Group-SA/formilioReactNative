@@ -75,21 +75,7 @@ export const getValidate = (token) => {
     .catch((err) => console.error(err.message));
 };
 
-export const getForm = (apiUrl, token, formName) => {
-  return new Promise((resolve, reject) => {
-    fetch(apiUrl + 'auth/getForm?formName=' + formName, {
-      method: 'GET',
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => resolve(data))
-      .catch((err) => reject(err));
-  });
-};
-
-export const createForm = (apiUrl, token, formName, formField, description) => {
+export const createForm = (token, formName, formField, description) => {
   let json;
   if (description !== '') {
     json = JSON.stringify({
@@ -103,7 +89,7 @@ export const createForm = (apiUrl, token, formName, formField, description) => {
       fields: formField,
     });
   }
-  return fetch(apiUrl + 'auth/createForm', {
+  return fetch(API_URL + 'auth/createForm', {
     method: 'POST',
     headers: {
       Authorization: token,
@@ -122,8 +108,22 @@ export const createForm = (apiUrl, token, formName, formField, description) => {
     .catch((err) => console.error(err.message));
 };
 
-export const deleteForm = (apiUrl, token, formName) => {
-  return fetch(apiUrl + 'auth/deleteForm?formName=' + formName, {
+export const getForm = (token, fid) => {
+  return new Promise((resolve, reject) => {
+    fetch(API_URL + 'auth/getForm?fid=' + fid, {
+      method: 'GET',
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => resolve(data))
+      .catch((err) => reject(err));
+  });
+};
+
+export const deleteForm = (token, fid) => {
+  return fetch(API_URL + 'auth/deleteForm?fid=' + fid, {
     method: 'DELETE',
     headers: {
       Authorization: token,

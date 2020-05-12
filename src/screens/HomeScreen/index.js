@@ -110,7 +110,7 @@ class HomeScreen extends Component {
         elevation={2}
         onPress={() =>
           this.props.navigation.navigate('FormViewScreen', {
-            formName: item.formName,
+            fid: item._id,
           })
         }>
         <Card.Title title={item.formName} />
