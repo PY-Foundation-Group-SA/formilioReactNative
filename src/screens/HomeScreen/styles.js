@@ -19,18 +19,19 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     zIndex: 1,
-    padding: 10,
+    paddingVertical: 20,
+    paddingBottom: 0,
   },
   searchContainer: {
     borderRadius: 8,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
   },
   flatList: {
-    marginVertical: 10,
+    marginTop: 10,
   },
   Card: {
     marginVertical: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     maxHeight: 160,
     overflow: 'hidden',
   },

@@ -8,6 +8,7 @@ import {
   Avatar,
   IconButton,
   Subheading,
+  TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -47,7 +48,7 @@ class HomeScreen extends Component {
     } else {
       this.fetchFormsFromDatabase();
     }
-    this.props.navigation.addListener('willFocus', () => {
+    this.props.navigation.addListener('focus', () => {
       this.fetchFormsFromDatabase();
     });
   }
@@ -125,32 +126,32 @@ class HomeScreen extends Component {
 
   renderList = ({item}) => {
     return (
-      <Card
-        style={styles.Card}
-        elevation={2}
-        onPress={() =>
-          this.props.navigation.navigate('FormViewScreen', {
-            fid: item._id,
-          })
-        }>
-        <Card.Title
-          title={item.formName}
-          subtitle={item.description}
-          left={({size}) => (
-            <Avatar.Text
-              size={size}
-              label={item.formName.split(' ')[0][0].toUpperCase()}
-            />
-          )}
-          right={({size}) => (
-            <IconButton
-              size={size}
-              animated={true}
-              icon={() => <Icon size={24} name="hexagon" />}
-              onPress={() => {}}
-            />
-          )}
-        />
+      <Card style={styles.Card} elevation={4}>
+        <TouchableRipple
+          onPress={() =>
+            this.props.navigation.navigate('FormViewScreen', {
+              fid: item._id,
+            })
+          }>
+          <Card.Title
+            title={item.formName}
+            subtitle={item.description}
+            left={({size}) => (
+              <Avatar.Text
+                size={size}
+                label={item.formName.split(' ')[0][0].toUpperCase()}
+              />
+            )}
+            right={({size}) => (
+              <IconButton
+                size={size}
+                animated={true}
+                icon={() => <Icon size={24} name="hexagon" />}
+                onPress={() => {}}
+              />
+            )}
+          />
+        </TouchableRipple>
       </Card>
     );
   };

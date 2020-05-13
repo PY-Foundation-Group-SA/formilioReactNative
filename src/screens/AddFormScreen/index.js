@@ -1,8 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {View} from 'react-native';
-import {Snackbar, ActivityIndicator} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Snackbar, ActivityIndicator, IconButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
 // importing components
@@ -65,6 +64,21 @@ class AddFormScreen extends Component {
     });
   };
 
+  closeFormCreation = () => {
+    this.setState({
+      formFields: [
+        {
+          name: '',
+          regEx: '',
+        },
+      ],
+      formName: '',
+      description: '',
+      isLoading: false,
+    });
+    this.props.navigation.navigate('HomeScreen');
+  };
+
   createFormOnPress = () => {
     this.setState({
       isLoading: true,
@@ -93,7 +107,8 @@ class AddFormScreen extends Component {
     createForm(state.token, formName, formFields, description)
       .then((isCreated) => {
         if (isCreated) {
-          this.props.navigation.goBack();
+          this.closeFormCreation();
+          this.props.navigation.navigate('HomeScreen');
         }
       })
       .catch(() => {
@@ -185,13 +200,12 @@ class AddFormScreen extends Component {
             {backgroundColor: this.context.state.theme ? 'black' : 'white'},
           ]}>
           <View style={styles.goBackButtonContainer}>
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-              <Icon
-                name="x"
-                size={24}
-                color={this.context.state.theme ? 'white' : 'black'}
-              />
-            </TouchableOpacity>
+            <IconButton
+              icon={({size, color}) => (
+                <Icon name="x" size={size} color={color} />
+              )}
+              onPress={() => this.closeFormCreation()}
+            />
           </View>
           {this.renderFormHandler()}
           <Snackbar

@@ -54,14 +54,14 @@ const FormStarting = (props) => {
 
   Animated.timing(animateStart, {
     toValue: 1,
-    duration: 1000,
+    duration: 500,
     useNativeDriver: true,
   }).start();
 
   const createFormField = () => {
     Animated.timing(formNameFilled, {
       toValue: 1,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true,
     }).start();
     Keyboard.dismiss();
@@ -74,17 +74,17 @@ const FormStarting = (props) => {
   const addNewField = () => {
     Animated.timing(formNameFilled, {
       toValue: 0,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true,
     }).start(() => {
       Animated.timing(regSelected, {
         toValue: 0,
-        duration: 1000,
+        duration: 500,
         useNativeDriver: true,
       }).start(() => {
         Animated.timing(animateStart, {
           toValue: 1,
-          duration: 1000,
+          duration: 500,
           useNativeDriver: true,
         }).start();
       });
@@ -133,7 +133,7 @@ const FormStarting = (props) => {
           onPress={() => {
             Animated.timing(regSelected, {
               toValue: 1,
-              duration: 1000,
+              duration: 500,
               useNativeDriver: true,
             }).start();
           }}>
