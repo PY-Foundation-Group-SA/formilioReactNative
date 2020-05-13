@@ -46,7 +46,7 @@ class FormViewScreen extends Component {
   }
 
   componentDidMount() {
-    const fid = this.props.navigation.getParam('fid');
+    const fid = this.props.route.params.fid;
     this.loadForm(fid);
   }
 
@@ -176,6 +176,21 @@ class FormViewScreen extends Component {
 
     return (
       <>
+        <AppBar
+          downloadHandler={this.downloadHandler}
+          deleteFormHandler={() =>
+            Alert.alert(
+              'Delete Form',
+              'Your are about to delete a form. All response collected through that form will be deleted!',
+              [
+                {text: 'cancel'},
+                {text: 'Delete', onPress: () => this.deleteFormHandler()},
+              ],
+              {cancelable: true},
+            )
+          }
+          goBack={this.props.navigation.goBack}
+        />
         <ScrollView
           contentContainerStyle={[
             styles.formViewMainContainer,
@@ -232,21 +247,6 @@ class FormViewScreen extends Component {
             {this.renderFormFields()}
           </View>
         </ScrollView>
-        <AppBar
-          downloadHandler={this.downloadHandler}
-          deleteFormHandler={() =>
-            Alert.alert(
-              'Delete Form',
-              'Your are about to delete a form. All response collected through that form will be deleted!',
-              [
-                {text: 'cancel'},
-                {text: 'Delete', onPress: () => this.deleteFormHandler()},
-              ],
-              {cancelable: true},
-            )
-          }
-          goBack={this.props.navigation.goBack}
-        />
         <Snackbar
           style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}
