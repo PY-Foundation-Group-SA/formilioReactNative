@@ -25,7 +25,7 @@ const SplashScreen = (props) => {
       theme === 'true' ? enableDarkTheme() : null;
       if (token) {
         await addToken(token);
-        props.navigation.navigate('HomeScreen');
+        props.navigation.navigate('MainAppDrawer');
         return;
       }
       props.navigation.navigate('UserStartingScreen');

@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-const {height} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 export default StyleSheet.create({
   homeScreenLoaderContainer: {
@@ -17,18 +17,26 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'stretch',
     zIndex: 1,
+    padding: 10,
   },
   searchContainer: {
-    margin: 10,
+    borderRadius: 8,
+    marginHorizontal: 10,
   },
   flatList: {
-    alignSelf: 'stretch',
+    marginVertical: 10,
   },
   Card: {
-    margin: 10,
+    marginVertical: 10,
+    marginHorizontal: 10,
     maxHeight: 160,
     overflow: 'hidden',
+  },
+  cardInnerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

@@ -122,7 +122,7 @@ class UserStartingScreen extends Component {
         });
       }
       await addToken(resp.payload.signInToken);
-      return this.props.navigation.navigate('HomeScreen');
+      return this.props.navigation.navigate('MainAppDrawer');
     }
   };
 

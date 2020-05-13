@@ -3,13 +3,13 @@ import React, {Component} from 'react';
 import {View, FlatList, Alert} from 'react-native';
 import {
   ActivityIndicator,
-  Text,
   Searchbar,
-  Divider,
   Card,
-  Paragraph,
-  Headline,
+  Avatar,
+  IconButton,
+  Subheading,
 } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Feather';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -33,6 +33,7 @@ class HomeScreen extends Component {
       formList: [],
       isListRefreshing: false,
       search: '',
+      isOnSearch: false,
     };
     this.validatorNames = [];
     this.formList = [];
@@ -103,7 +104,26 @@ class HomeScreen extends Component {
     });
   };
 
-  renderList = ({item, index}) => {
+  whichSearchIcon = () => {
+    const {isOnSearch, search} = this.state;
+    if (isOnSearch) {
+      return 'search';
+    }
+    if (search !== '') {
+      return 'search';
+    }
+    return 'menu';
+  };
+
+  onIconPress = () => {
+    const {isOnSearch} = this.state;
+    if (isOnSearch) {
+      return null;
+    }
+    this.props.navigation.openDrawer();
+  };
+
+  renderList = ({item}) => {
     return (
       <Card
         style={styles.Card}
@@ -113,14 +133,24 @@ class HomeScreen extends Component {
             fid: item._id,
           })
         }>
-        <Card.Title title={item.formName} />
-        <Card.Content>
-          <Paragraph>
-            {item.description.length < 100
-              ? item.description
-              : item.description.slice(0, 100) + '...'}
-          </Paragraph>
-        </Card.Content>
+        <Card.Title
+          title={item.formName}
+          subtitle={item.description}
+          left={({size}) => (
+            <Avatar.Text
+              size={size}
+              label={item.formName.split(' ')[0][0].toUpperCase()}
+            />
+          )}
+          right={({size}) => (
+            <IconButton
+              size={size}
+              animated={true}
+              icon={() => <Icon size={24} name="hexagon" />}
+              onPress={() => {}}
+            />
+          )}
+        />
       </Card>
     );
   };
@@ -147,10 +177,22 @@ class HomeScreen extends Component {
         style={[
           styles.homeScreenLoaderContainer,
           {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: theme ? 'black' : 'white',
+            marginTop: -80,
           },
         ]}>
-        <Text>Create A Form</Text>
+        <Icon
+          size={40}
+          name="info"
+          color={theme ? 'white' : 'black'}
+          style={{marginVertical: 20}}
+        />
+        <Subheading style={{textAlign: 'center'}}>
+          Start With Creating Your First Form
+        </Subheading>
       </View>
     );
   };
@@ -174,16 +216,12 @@ class HomeScreen extends Component {
               backgroundColor: theme ? 'black' : 'white',
             },
           ]}>
-          <Headline
-            style={{
-              alignSelf: 'flex-start',
-              marginTop: 20,
-              fontSize: 28,
-              marginLeft: 20,
-            }}>
-            Formilio
-          </Headline>
           <Searchbar
+            onFocus={() => this.setState({isOnSearch: true})}
+            onEndEditing={() => this.setState({isOnSearch: false})}
+            icon={(props) => <Icon {...props} name={this.whichSearchIcon()} />}
+            onIconPress={() => this.onIconPress()}
+            clear={(props) => <Icon {...props} name="x" />}
             style={styles.searchContainer}
             placeholder="Search for form"
             onChangeText={(s) => this.setSearchText(s)}
@@ -192,9 +230,8 @@ class HomeScreen extends Component {
           <FlatList
             style={styles.flatList}
             data={formList}
-            keyExtractor={(item, index) => item.formName}
+            keyExtractor={(item) => item.formName}
             renderItem={this.renderList}
-            ItemSeparatorComponent={() => <Divider />}
             ListEmptyComponent={this.ListEmptyComponent(theme)}
             refreshing={isListRefreshing}
             onRefresh={this.onRefresh}

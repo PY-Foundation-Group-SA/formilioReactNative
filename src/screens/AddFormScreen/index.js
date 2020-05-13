@@ -13,7 +13,7 @@ import FormFieldInput from '../../components/FormFieldInput';
 import {Context as UserContext} from '../../contexts/UserContext';
 
 // importing apiHelpers
-import {createForm} from '../../utils/apiHelpers';
+import {createForm, getValidate} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
@@ -38,7 +38,12 @@ class AddFormScreen extends Component {
       isLoading: false,
     };
 
-    this.regList = this.props.navigation.getParam('validatorNames');
+    this.regList = null;
+  }
+
+  async componentDidMount() {
+    const {state} = this.context;
+    this.regList = await getValidate(state.token);
   }
 
   setFormFields = (name, regEx) => {
