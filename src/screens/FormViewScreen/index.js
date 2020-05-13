@@ -7,6 +7,7 @@ import {
   PermissionsAndroid,
   Alert,
   Linking,
+  StatusBar,
 } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {

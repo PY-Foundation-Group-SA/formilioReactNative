@@ -12,7 +12,7 @@ const FormStarting = (props) => {
 
   Animated.timing(animateStart, {
     toValue: 1,
-    duration: 1000,
+    duration: 500,
     useNativeDriver: true,
   }).start();
 
@@ -30,7 +30,7 @@ const FormStarting = (props) => {
     }
     Animated.timing(animateStart, {
       toValue: 0,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true,
     }).start(() => {
       props.onSubmitEditing(text);
