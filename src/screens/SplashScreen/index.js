@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect, useContext} from 'react';
-import {View, StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -8,14 +9,10 @@ import {Context as UserContext} from '../../contexts/UserContext';
 // importing asyncHelpers
 import {getData} from '../../utils/asyncStorageHelper';
 
-const {Value} = Animated;
-
 const SplashScreen = (props) => {
   const {state, addToken, enableDarkTheme} = useContext(UserContext);
-  const animationStart = useRef(new Value(0)).current;
 
   useEffect(() => {
-    animationStart.setValue(0);
     async function fetchFromAsyncStorage() {
       const [token, theme] = await Promise.all([
         getData('TOKEN'),
@@ -30,26 +27,19 @@ const SplashScreen = (props) => {
       }
       props.navigation.navigate('UserStartingScreen');
     }
-    Animated.timing(animationStart, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start(() => {
-      fetchFromAsyncStorage();
-      Animated.timing(animationStart, {
-        toValue: 0,
-        duration: 2000,
-        useNativeDriver: true,
-      }).start();
-    });
-  }, [props.navigation, animationStart, state, addToken, enableDarkTheme]);
+    fetchFromAsyncStorage();
+  }, [props.navigation, state, addToken, enableDarkTheme]);
 
   return (
     <View style={styles.viewStyles}>
-      <Animated.Text
-        style={{opacity: animationStart, color: 'white', fontSize: 30}}>
+      <Text
+        style={{opacity: 1, color: 'white', fontSize: 30, marginVertical: 40}}>
         Formilio
-      </Animated.Text>
+      </Text>
+      <ActivityIndicator />
+      <Text style={{color: 'white', position: 'absolute', bottom: 20}}>
+        Made with ♥ in React Native
+      </Text>
     </View>
   );
 };

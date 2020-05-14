@@ -24,8 +24,8 @@ export default function Main() {
           return (
             <PaperProvider theme={isDarkModeOn ? DarkTheme : DefaultTheme}>
               <StatusBar
-                translucent={true}
-                hidden={true}
+                translucent={false}
+                hidden={false}
                 animated={true}
                 backgroundColor={isDarkModeOn ? 'black' : 'white'}
                 barStyle={isDarkModeOn ? 'light-content' : 'dark-content'}

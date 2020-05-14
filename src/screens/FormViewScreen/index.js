@@ -7,7 +7,6 @@ import {
   PermissionsAndroid,
   Alert,
   Linking,
-  StatusBar,
 } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {
@@ -149,35 +148,75 @@ class FormViewScreen extends Component {
     });
   };
 
+  renderForm = () => {
+    return (
+      <ScrollView
+        contentContainerStyle={[
+          styles.formViewMainContainer,
+          {backgroundColor: this.context.state.theme ? 'black' : 'white'},
+        ]}
+        showsVerticalScrollIndicator={false}>
+        <View style={{marginBottom: 20}}>
+          <Caption>Form Name</Caption>
+          <Title>{this.form.formName}</Title>
+        </View>
+        <Divider />
+        <View style={{marginBottom: 20}}>
+          <Caption>Created On</Caption>
+          <Title>{Date(this.form.createOn)}</Title>
+        </View>
+        <View style={{marginBottom: 20}}>
+          <Caption>Description</Caption>
+          <Title>
+            {this.form.description ? this.form.description : 'Not Provided'}
+          </Title>
+        </View>
+        <View style={{marginBottom: 20}}>
+          <Caption>Form URL (Tap:Open, Long Press:Copy)</Caption>
+          <TouchableOpacity
+            onPress={() => {
+              if (this.form.url) {
+                this.setState({
+                  snack: true,
+                  snackText: 'Opening Url in Browser',
+                });
+                Linking.openURL(this.form.url)
+                  .then(() => {
+                    console.log('linked opened');
+                  })
+                  .catch((err) => {
+                    console.log(err.message);
+                    this.setState({
+                      snack: true,
+                      snackText: 'Failed to Url',
+                    });
+                  });
+              }
+            }}
+            onLongPress={() => {
+              Clipboard.setString(this.form.url);
+              this.setState({snack: true, snackText: 'Link Copied'});
+            }}>
+            <Title>{this.form.url ? this.form.url : 'Url not found'}</Title>
+          </TouchableOpacity>
+        </View>
+        <Divider />
+        <View style={{marginBottom: 20}}>
+          <Caption>Form Fields</Caption>
+          {this.renderFormFields()}
+        </View>
+      </ScrollView>
+    );
+  };
+
   render() {
     const {isLoading} = this.state;
     const theme = this.context.state.theme;
 
-    if (isLoading) {
-      return (
-        <View
-          style={[
-            {
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'stretch',
-              zIndex: 1,
-              // paddingTop: Dimensions.get('window').height / 2 - 80,
-            },
-            {
-              backgroundColor: theme ? 'black' : 'white',
-            },
-          ]}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
     return (
       <>
         <AppBar
+          theme={theme}
           downloadHandler={this.downloadHandler}
           deleteFormHandler={() =>
             Alert.alert(
@@ -192,62 +231,25 @@ class FormViewScreen extends Component {
           }
           goBack={this.props.navigation.goBack}
         />
-        <ScrollView
-          contentContainerStyle={[
-            styles.formViewMainContainer,
-            {backgroundColor: this.context.state.theme ? 'black' : 'white'},
-          ]}
-          showsVerticalScrollIndicator={false}>
-          <View style={{marginBottom: 20}}>
-            <Caption>Form Name</Caption>
-            <Title>{this.form.formName}</Title>
+        {isLoading ? (
+          <View
+            style={[
+              {
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              {
+                backgroundColor: theme ? 'black' : 'white',
+              },
+            ]}>
+            <ActivityIndicator />
           </View>
-          <Divider />
-          <View style={{marginBottom: 20}}>
-            <Caption>Created On</Caption>
-            <Title>{Date(this.form.createOn)}</Title>
-          </View>
-          <View style={{marginBottom: 20}}>
-            <Caption>Description</Caption>
-            <Title>
-              {this.form.description ? this.form.description : 'Not Provided'}
-            </Title>
-          </View>
-          <View style={{marginBottom: 20}}>
-            <Caption>Form URL (Tap:Open, Long Press:Copy)</Caption>
-            <TouchableOpacity
-              onPress={() => {
-                if (this.form.url) {
-                  this.setState({
-                    snack: true,
-                    snackText: 'Opening Url in Browser',
-                  });
-                  Linking.openURL(this.form.url)
-                    .then(() => {
-                      console.log('linked opened');
-                    })
-                    .catch((err) => {
-                      console.log(err.message);
-                      this.setState({
-                        snack: true,
-                        snackText: 'Failed to Url',
-                      });
-                    });
-                }
-              }}
-              onLongPress={() => {
-                Clipboard.setString(this.form.url);
-                this.setState({snack: true, snackText: 'Link Copied'});
-              }}>
-              <Title>{this.form.url ? this.form.url : 'Url not found'}</Title>
-            </TouchableOpacity>
-          </View>
-          <Divider />
-          <View style={{marginBottom: 20}}>
-            <Caption>Form Fields</Caption>
-            {this.renderFormFields()}
-          </View>
-        </ScrollView>
+        ) : (
+          this.renderForm()
+        )}
         <Snackbar
           style={{alignItems: 'center'}}
           duration={Snackbar.DURATION_SHORT}

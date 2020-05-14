@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, StyleSheet, Dimensions, Alert} from 'react-native';
+import {View, StyleSheet, Alert, Linking} from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {
   Headline,
@@ -60,6 +60,26 @@ const DrawerContent = (props) => {
           active={state.index === 1}
         />
         <Divider style={{marginVertical: 10}} />
+        <Caption style={styles.drawerHelperText}>More Options</Caption>
+        <Drawer.Item
+          label="Support Project"
+          icon={({size, color}) => (
+            <Icon size={size} name="github" color={color} />
+          )}
+          onPress={() =>
+            Linking.openURL(
+              'https://github.com/sarthakpranesh/formilioReactNative',
+            )
+          }
+        />
+        <Drawer.Item
+          label="Log Out"
+          icon={({size, color}) => (
+            <Icon size={size} name="log-out" color={color} />
+          )}
+          onPress={() => onLogOut()}
+        />
+        <Divider style={{marginVertical: 10}} />
         <Caption style={styles.drawerHelperText}>Theme</Caption>
         <Drawer.Section>
           <TouchableRipple onPress={() => {}}>
@@ -69,13 +89,6 @@ const DrawerContent = (props) => {
             </View>
           </TouchableRipple>
         </Drawer.Section>
-        <Drawer.Item
-          label="Log Out"
-          icon={({size, color}) => (
-            <Icon size={size} name="log-out" color={color} />
-          )}
-          onPress={() => onLogOut()}
-        />
       </View>
     </DrawerContentScrollView>
   );
