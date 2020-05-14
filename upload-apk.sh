@@ -3,7 +3,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
   mkdir $HOME/buildApk/
   mkdir $HOME/Github/
 
-  cp -R android/app/build/outputs/apk/debug/app-debug.apk $HOME/buildApk/
+  cp -R android/app/build/outputs/apk/release/app-release.apk $HOME/buildApk/
 
   cd $HOME/Github/
   git config --global user.email "sarthak.pranesh2018@vitstudent.ac.in" 

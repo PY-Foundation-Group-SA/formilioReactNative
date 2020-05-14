@@ -9,8 +9,7 @@
     "start": "npx react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
-    "build-android": "cd ./android && ./gradlew clean && ./gradlew assembleRelease",
-    "build-t": "cd ./android && ./gradlew assembleDebug"
+    "build-android": "cd ./android && ./gradlew clean && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",
