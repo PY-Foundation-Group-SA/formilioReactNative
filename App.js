@@ -3,7 +3,11 @@ import React, {useContext} from 'react';
 import {Context as UserContext} from './src/contexts/UserContext';
 import DrawerContent from './src/components/DrawerContent/index';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionSpecs,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -23,7 +27,19 @@ function FormStackNavigator() {
       headerMode="none"
       keyboardHandlingEnabled={true}>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="FormViewScreen" component={FormViewScreen} />
+      <Stack.Screen
+        options={{
+          gestureDirection: 'horizontal',
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          transitionSpec: {
+            animation: 'spring',
+            open: TransitionSpecs.TransitionIOSSpec,
+            close: TransitionSpecs.TransitionIOSSpec,
+          },
+        }}
+        name="FormViewScreen"
+        component={FormViewScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -49,10 +65,8 @@ function MainAppDrawer(props) {
         )}
         initialRouteName="FormStackNavigator"
         backBehavior="initialRoute"
-        openByDefault={false}
-        drawerPosition="left"
-        drawerType="slide"
-        edgeWidth={200}
+        drawerType="front"
+        edgeWidth={300}
         keyboardDismissMode="on-drag"
         minSwipeDistance={100}
         lazy={false}>

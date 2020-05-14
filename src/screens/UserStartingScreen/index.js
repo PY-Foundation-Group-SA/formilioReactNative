@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Snackbar,
 } from 'react-native-paper';
+import validator from 'validator';
 
 // importing contexts
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -36,6 +37,9 @@ class UserStartingScreen extends Component {
       snackText: '',
       isOnLogin: true,
     };
+
+    this.emailRef = null;
+    this.passwordRef = null;
 
     this.onStartAnimation = new Animated.Value(0);
     this.screenLoadingOpacity = this.onStartAnimation.interpolate({
@@ -71,6 +75,9 @@ class UserStartingScreen extends Component {
   };
 
   setPassword = (password) => {
+    if (password.length > 40) {
+      return;
+    }
     this.setState({
       password,
     });
@@ -118,7 +125,14 @@ class UserStartingScreen extends Component {
         return this.setState({
           isLoading: false,
           snack: true,
-          snackText: resp.error,
+          snackText: resp.error ? resp.error : 'User account not found!',
+        });
+      }
+      if (!resp.payload.user.isEmailVerified) {
+        return this.setState({
+          isLoading: false,
+          snack: true,
+          snackText: resp.error ? resp.error : 'Please verify your email first',
         });
       }
       await addToken(resp.payload.signInToken);
@@ -155,9 +169,27 @@ class UserStartingScreen extends Component {
   };
 
   onPress = async () => {
-    const {isOnLogin} = this.state;
-    this.setIsLoading(true);
+    const {isOnLogin, email, password} = this.state;
 
+    if (!validator.isEmail(email)) {
+      this.emailRef.focus();
+      return this.setState({
+        isLoading: false,
+        snack: true,
+        snackText: 'Not a valid email!',
+      });
+    }
+
+    if (password.length < 6 || password.length > 40) {
+      this.passwordRef.focus();
+      return this.setState({
+        isLoading: false,
+        snack: true,
+        snackText: 'Passwords should be of 6-40 characters long!',
+      });
+    }
+
+    this.setIsLoading(true);
     if (isOnLogin) {
       this.onLogin();
     } else {
@@ -219,12 +251,14 @@ class UserStartingScreen extends Component {
               },
             ]}>
             <TextInput
+              ref={(r) => (this.emailRef = r)}
               mode="outlined"
               label="Email Id"
               value={email}
               onChangeText={(a) => this.setEmail(a)}
             />
             <TextInput
+              ref={(r) => (this.passwordRef = r)}
               mode="outlined"
               label="Password"
               value={password}
@@ -232,6 +266,7 @@ class UserStartingScreen extends Component {
               style={{
                 marginTop: 10,
               }}
+              secureTextEntry={true}
             />
           </Animated.View>
           <Animated.View

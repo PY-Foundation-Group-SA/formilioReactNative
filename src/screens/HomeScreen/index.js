@@ -146,8 +146,14 @@ class HomeScreen extends Component {
               <IconButton
                 size={size}
                 animated={true}
-                icon={() => <Icon size={24} name="hexagon" />}
-                onPress={() => {}}
+                icon={({color}) => (
+                  <Icon size={size} name="arrow-right" color={color} />
+                )}
+                onPress={() =>
+                  this.props.navigation.navigate('FormViewScreen', {
+                    fid: item._id,
+                  })
+                }
               />
             )}
           />
