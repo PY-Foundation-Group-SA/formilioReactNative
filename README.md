@@ -5,7 +5,7 @@ Welcome to Formilio! The goal behind formilio is to provide an open source form 
  mind ease of access and usability. Using Formilio is simple and straight forward, you create a form and the app will provide you with a unique url. You can share this url to collect responses.
  </p>
  <p>
- You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements if you wise to implement your own project over it.
+ You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements if you wish to implement your own project over it.
 Don't forget to star the project 🌟
 </p>
 
