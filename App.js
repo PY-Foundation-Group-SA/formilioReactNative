@@ -66,7 +66,7 @@ function MainAppDrawer(props) {
         )}
         initialRouteName="FormStackNavigator"
         backBehavior="initialRoute"
-        drawerType="front"
+        drawerType="slide"
         edgeWidth={300}
         headerMode="none"
         keyboardDismissMode="on-drag"
