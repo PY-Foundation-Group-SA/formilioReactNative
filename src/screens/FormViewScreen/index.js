@@ -127,15 +127,21 @@ class FormViewScreen extends Component {
     }
   };
 
-  deleteFormHandler = () => {
+  deleteFormHandler = async () => {
     const {state} = this.context;
-    deleteForm(state.token, this.form._id)
-      .then(() => {
-        this.props.navigation.navigate('HomeScreen');
-      })
-      .catch(() => {
-        console.log('Could not delete form');
-      });
+    try {
+      const isDeleted = await deleteForm(state.token, this.form._id);
+      if (isDeleted) {
+        return this.props.navigation.navigate('HomeScreen');
+      }
+      throw new Error('Unable to delete form!');
+    } catch (err) {
+      console.log(err);
+      Alert.alert('Delete Form', err.message, [
+        {text: 'cancel'},
+        {text: 'Retry', onPress: () => this.deleteFormHandler()},
+      ]);
+    }
   };
 
   renderFormFields = () => {

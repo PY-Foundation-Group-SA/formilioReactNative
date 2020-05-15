@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef, useEffect, useContext} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 

@@ -36,8 +36,7 @@ class AddFormScreen extends Component {
       snackText: '',
       isLoading: false,
     };
-
-    this.regList = null;
+    this.regList = [];
   }
 
   async componentDidMount() {

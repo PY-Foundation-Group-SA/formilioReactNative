@@ -12,9 +12,10 @@ const AppBar = (props) => {
       style={{
         display: 'flex',
         flexDirection: 'row',
+        elevation: 4,
         backgroundColor: theme
-          ? DarkTheme.colors.primary
-          : DefaultTheme.colors.primary,
+          ? DarkTheme.colors.surface
+          : DefaultTheme.colors.surface,
       }}>
       <Appbar.Action
         icon={({size}) => (

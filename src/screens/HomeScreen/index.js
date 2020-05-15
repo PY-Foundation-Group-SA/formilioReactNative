@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import {View, FlatList, Alert} from 'react-native';
+import {View, FlatList, Alert, BackHandler} from 'react-native';
 import {
   ActivityIndicator,
   Searchbar,
@@ -55,25 +55,35 @@ class HomeScreen extends Component {
 
   fetchFormsFromDatabase = async () => {
     const {state} = this.context;
-    Promise.all([getAllForms(state.token), getValidate(state.token)])
-      .then(([formList, v]) => {
-        if (formList === false || v === []) {
-          return;
-        }
-        this.validatorNames = v;
-        this.formList = formList;
-        this.setFormList(formList);
-        this.setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.message);
+    try {
+      const [formList, v] = await Promise.all([
+        getAllForms(state.token),
+        getValidate(state.token),
+      ]);
+      if (formList === false || v === []) {
+        return;
+      }
+      this.validatorNames = v;
+      this.formList = formList;
+      this.setFormList(formList);
+      this.setIsLoading(false);
+    } catch (err) {
+      console.log(err.message);
+      if (err.message === 'Network request failed') {
         Alert.alert(
-          'Server Error',
-          'Could not fetch form/validation details from the server!',
-          [{text: 'Ok'}],
-          {cancelable: true},
+          'Error',
+          'Oops! Looks like your net connection is down. Unfortunately, we need it to function correctly :(',
+          [
+            {text: 'Retry', onPress: () => this.fetchFormsFromDatabase()},
+            {text: 'Exit', onPress: () => BackHandler.exitApp()},
+          ],
+          {cancelable: false},
         );
-      });
+      } else {
+        Alert.alert('Error', err.message, [{text: 'Ok'}]);
+      }
+      this.setIsLoading(false);
+    }
   };
 
   setIsLoading = (bool) => {
@@ -163,7 +173,7 @@ class HomeScreen extends Component {
   };
 
   ListEmptyComponent = (theme) => {
-    const {isLoading} = this.state;
+    const {isLoading, search} = this.state;
 
     if (isLoading) {
       return (
@@ -177,6 +187,18 @@ class HomeScreen extends Component {
           <ActivityIndicator />
         </View>
       );
+    }
+
+    if (search !== '') {
+      <View
+        style={[
+          styles.homeScreenLoaderContainer,
+          {
+            backgroundColor: theme ? 'black' : 'white',
+          },
+        ]}>
+        <Subheading style={{textAlign: 'center'}}>Form not found</Subheading>
+      </View>;
     }
 
     return (
@@ -244,12 +266,7 @@ class HomeScreen extends Component {
             onRefresh={this.onRefresh}
           />
           <Fab
-            navigation={this.props.navigation}
-            onAddForm={() =>
-              this.props.navigation.navigate('AddFormScreen', {
-                validatorNames: this.validatorNames,
-              })
-            }
+            onAddForm={() => this.props.navigation.navigate('AddFormScreen')}
           />
         </View>
       </>
