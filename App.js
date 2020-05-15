@@ -46,9 +46,6 @@ function FormStackNavigator() {
 
 const Drawer = createDrawerNavigator();
 
-// tmp - for handling initial render flicker
-let initialRender = true;
-
 function MainAppDrawer(props) {
   const {state, removeToken} = useContext(UserContext);
 
@@ -57,19 +54,12 @@ function MainAppDrawer(props) {
     return props.navigation.navigate('UserStartingScreen');
   };
 
-  let opacity = 1;
-  if (initialRender) {
-    initialRender = false;
-    opacity = 0;
-  }
-
   return (
     <NavigationContainer>
       <Drawer.Navigator
         drawer
         drawerStyle={{
           backgroundColor: state.theme ? 'rgba(35, 35, 35, 1)' : 'white',
-          opacity: opacity,
         }}
         drawerContent={(props) => (
           <DrawerContent {...props} theme={state.theme} logOut={logOut} />
