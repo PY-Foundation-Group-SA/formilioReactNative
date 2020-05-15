@@ -16,7 +16,6 @@ import Icon from 'react-native-vector-icons/Feather';
 import DarkModeToggleSwitch from '../DarkModeToggleSwitch';
 
 const DrawerContent = (props) => {
-  const theme = props.theme;
   const logOut = props.logOut;
   const navigation = props.navigation;
 
@@ -38,7 +37,7 @@ const DrawerContent = (props) => {
   };
   const state = props.state;
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView>
       <View style={styles.drawerContent}>
         <Headline style={styles.drawerScreenHeading}>Formilio</Headline>
         <Divider style={{marginVertical: 10}} />
@@ -96,7 +95,6 @@ const DrawerContent = (props) => {
 
 const styles = StyleSheet.create({
   drawerContent: {
-    marginTop: 0,
     paddingHorizontal: 0,
     display: 'flex',
     flexDirection: 'column',
@@ -105,7 +103,7 @@ const styles = StyleSheet.create({
   },
   drawerScreenHeading: {
     alignSelf: 'flex-start',
-    marginVertical: 10,
+    marginTop: 10,
     marginHorizontal: 10,
     fontSize: 28,
     fontWeight: 'bold',
