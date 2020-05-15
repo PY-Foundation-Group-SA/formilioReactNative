@@ -128,7 +128,7 @@ class UserStartingScreen extends Component {
           snackText: resp.error ? resp.error : 'User account not found!',
         });
       }
-      if (!resp.payload.user.isEmailVerified) {
+      if (!resp.payload.isEmailVerified) {
         return this.setState({
           isLoading: false,
           snack: true,
