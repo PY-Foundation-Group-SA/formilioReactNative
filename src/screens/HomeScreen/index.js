@@ -237,7 +237,7 @@ class HomeScreen extends Component {
           <FlatList
             style={styles.flatList}
             data={formList}
-            keyExtractor={(item) => item.formName}
+            keyExtractor={(item) => item._id}
             renderItem={this.renderList}
             ListEmptyComponent={this.ListEmptyComponent(theme)}
             refreshing={isListRefreshing}
