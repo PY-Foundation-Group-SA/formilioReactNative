@@ -2,13 +2,30 @@
 ## Meet Formilio - form generator for your daily needs!
 <p>
 Welcome to Formilio! The goal behind formilio is to provide an open source form generation tool ( like google forms ), keeping in
- mind ease of access and usability. You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements.
+ mind ease of access and usability. Using Formilio is simple and straight forward, you create a form and the app will provide you with a unique url. You can share this url to collect responses.
+ </p>
+ <p>
+ You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements if you wise to implement your own project over it.
 Don't forget to star the project 🌟
 </p>
 
-## Download Latest-Release: [Formilio](https://drive.google.com/file/d/1txRFgkINie1AwEIItjDRfseYsxZyoifG/view?usp=sharing)
+## Download Latest-Release: [Formilio](https://github.com/sarthakpranesh/formilioReactNative/raw/build/formilio.apk)
+
+## For Developer & Enthusiasts
+For contributors, developer and testers
+1. `git clone https://github.com/sarthakpranesh/formilioReactNative.git`
+2. `cd formilioReactNative`
+3. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
 
 <br/>
+
+If you wish to have your own server and mongo database then make sure you follow the below steps
+1. Make sure you have started your own [Formilio API](https://github.com/sarthakpranesh/formilio) and [Formilio Form Frontend](https://github.com/sarthakpranesh/formilio-frontend) servers, if you haven't then set them up
+2. `git clone https://github.com/sarthakpranesh/formilioReactNative.git`
+3. `cd formilioReactNative`
+4. Add your Formilio API url to the .env (remove existing one): `API_URL = https://YOUR-API-URL.com/` 
+5. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
+
 
 ## Features Table
 
