@@ -6,7 +6,6 @@ const UserContext = (UserSet, action) => {
     case 'add_token':
       storeData('TOKEN', action.payload.token);
       return {
-        apiUrl: UserSet.apiUrl,
         token: action.payload.token,
         theme: UserSet.theme,
       };
@@ -16,20 +15,17 @@ const UserContext = (UserSet, action) => {
     case 'darkTheme_enable':
       storeData('THEME', 'true');
       return {
-        apiUrl: UserSet.apiUrl,
         token: UserSet.token,
         theme: true,
       };
     case 'darkTheme_disable':
       storeData('THEME', 'false');
       return {
-        apiUrl: UserSet.apiUrl,
         token: UserSet.token,
         theme: false,
       };
     default:
       return {
-        apiUrl: UserSet.apiUrl,
         token: UserSet.token,
         theme: UserSet.theme,
       };
@@ -69,7 +65,6 @@ export const {Context, Provider} = createDataContext(
     disableDarkTheme,
   },
   {
-    apiUrl: '',
     token: '',
     theme: false,
   },
