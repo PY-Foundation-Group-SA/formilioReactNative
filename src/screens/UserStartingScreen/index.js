@@ -276,6 +276,10 @@ class UserStartingScreen extends Component {
               label="Email Id"
               value={email}
               onChangeText={(a) => this.setEmail(a)}
+              style={{
+                marginHorizontal: 40,
+              }}
+              dense={true}
             />
             <TextInput
               ref={(r) => (this.passwordRef = r)}
@@ -285,8 +289,10 @@ class UserStartingScreen extends Component {
               onChangeText={(h) => this.setPassword(h)}
               style={{
                 marginTop: 10,
+                marginHorizontal: 40,
               }}
               secureTextEntry={true}
+              dense={true}
             />
           </Animated.View>
           <Animated.View

@@ -167,6 +167,7 @@ const FormStarting = (props) => {
             spellCheck={false}
             textAlign="center"
             textContentType="name"
+            dense={true}
             style={styles.textInput}
           />
         </View>
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   textInput: {
-    width: width - 80,
+    width: width - 120,
   },
   continueButtonContainer: {
     width: '100%',

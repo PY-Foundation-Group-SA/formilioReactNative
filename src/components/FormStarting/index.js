@@ -56,6 +56,7 @@ const FormStarting = (props) => {
           textAlign="center"
           textContentType="name"
           style={styles.textInput}
+          dense={true}
         />
         <HelperText type="error" visible={_hasErrors()}>
           Name Should be {`${props.minMax[0]}-${props.minMax[1]}`} characters
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     marginVertical: 40,
   },
   textInput: {
-    width: Dimensions.get('window').width - 80,
+    width: Dimensions.get('window').width - 120,
   },
 });
 
