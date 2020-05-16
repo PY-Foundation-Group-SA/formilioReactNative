@@ -57,24 +57,25 @@ function MainAppDrawer(props) {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        drawer
+        openByDefault={false}
         drawerStyle={{
           backgroundColor: state.theme ? 'rgba(35, 35, 35, 1)' : 'white',
         }}
         drawerContent={(props) => (
           <DrawerContent {...props} theme={state.theme} logOut={logOut} />
         )}
+        sceneContainerStyle={{
+          backgroundColor: state.theme ? 'rgba(35, 35, 35, 1)' : 'white',
+        }}
         initialRouteName="FormStackNavigator"
         backBehavior="initialRoute"
         drawerType="slide"
         edgeWidth={300}
         headerMode="none"
         keyboardDismissMode="on-drag"
-        openByDefault={false}
         minSwipeDistance={100}
         lazy={false}>
         <Drawer.Screen
-          openByDefault={false}
           name="FormStackNavigator"
           component={FormStackNavigator}
         />

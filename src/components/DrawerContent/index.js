@@ -37,7 +37,7 @@ const DrawerContent = (props) => {
   };
   const state = props.state;
   return (
-    <DrawerContentScrollView>
+    <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
         <Headline style={styles.drawerScreenHeading}>Formilio</Headline>
         <Divider style={{marginVertical: 10}} />
