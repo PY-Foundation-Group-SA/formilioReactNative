@@ -12,7 +12,6 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 
 // importing screens
-// import SplashScreen from './src/screens/SplashScreen'; should be removed in future
 import UserStartingScreen from './src/screens/UserStartingScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AddFormScreen from './src/screens/AddFormScreen';
