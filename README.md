@@ -15,7 +15,8 @@ Don't forget to star the project 🌟
 For contributors, developer and testers
 1. `git clone https://github.com/sarthakpranesh/formilioReactNative.git`
 2. `cd formilioReactNative`
-3. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
+3. `yarn install`
+4. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
 
 <br/>
 
@@ -24,7 +25,8 @@ If you wish to have your own server and mongo database then make sure you follow
 2. `git clone https://github.com/sarthakpranesh/formilioReactNative.git`
 3. `cd formilioReactNative`
 4. Add your Formilio API url to the .env (remove existing one): `API_URL = https://YOUR-API-URL.com/` 
-5. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
+5. `yarn install`
+6. `yarn android` - this will start your app in either a physical connected device or an emulator ( make sure you start the metro bundler before it using `yarn start` and leave it running )
 
 
 ## Features Table
