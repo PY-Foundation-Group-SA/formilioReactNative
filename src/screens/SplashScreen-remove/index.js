@@ -6,9 +6,6 @@ import {ActivityIndicator} from 'react-native-paper';
 // importing context
 import {Context as UserContext} from '../../contexts/UserContext';
 
-// importing asyncHelpers
-import {getData} from '../../utils/asyncStorageHelper';
-
 const SplashScreen = (props) => {
   const {state, addToken, enableDarkTheme} = useContext(UserContext);
 

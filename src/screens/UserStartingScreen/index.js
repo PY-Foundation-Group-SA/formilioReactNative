@@ -9,6 +9,7 @@ import {
   Snackbar,
 } from 'react-native-paper';
 import validator from 'validator';
+import SplashScreen from 'react-native-splash-screen';
 
 // importing contexts
 import {Context as UserContext} from '../../contexts/UserContext';
@@ -18,6 +19,9 @@ import DarkModeToggleSwitch from '../../components/DarkModeToggleSwitch';
 
 // importing utils
 import {loginUser, signUpUser} from '../../utils/apiHelpers';
+
+// importing asyncHelpers
+import {getData} from '../../utils/asyncStorageHelper';
 
 // importing styles
 import styles from './styles';
@@ -56,8 +60,24 @@ class UserStartingScreen extends Component {
     });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.fetchFromAsyncStorage();
     this.animateScreenIn();
+  }
+
+  async fetchFromAsyncStorage() {
+    const {enableDarkTheme, addToken} = this.context;
+    const [token, theme] = await Promise.all([
+      getData('TOKEN'),
+      getData('THEME'),
+    ]);
+    // setting a theme
+    theme === 'true' ? enableDarkTheme() : null;
+    if (token) {
+      await addToken(token);
+      this.props.navigation.navigate('MainAppDrawer');
+    }
+    SplashScreen.hide();
   }
 
   animateScreenIn = () => {
