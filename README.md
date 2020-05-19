@@ -9,7 +9,7 @@ Welcome to Formilio! The goal behind formilio is to provide an open source form 
 Don't forget to star the project 🌟
 </p>
 
-## Download Latest-Release: [Formilio](https://github.com/sarthakpranesh/formilioReactNative/raw/build/formilio.apk)
+## Download Latest-Release: [Formilio](https://github.com/sarthakpranesh/formilioReactNative/tree/build)
 
 ## For Developer & Enthusiasts
 For contributors, developer and testers
