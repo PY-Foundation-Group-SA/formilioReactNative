@@ -1,11 +1,23 @@
+<div align="center">
+
+<img height=200px src="assets/project-logo.png">
+
 # Formilio - React Native App
+
+[![Build Status](https://travis-ci.com/sarthakpranesh/formilioReactNative.svg?branch=master)](https://travis-ci.com/sarthakpranesh/formilioReactNative)
+![GitHub issues](https://img.shields.io/github/issues/sarthakpranesh/formilioReactNative)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/sarthakpranesh/formilioReactNative)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/sarthakpranesh/formilioReactNative)
+![GitHub](https://img.shields.io/github/license/sarthakpranesh/formilioReactNative)
+
+</div>
+
 ## Meet Formilio - form generator for your daily needs!
 <p>
-Welcome to Formilio! The goal behind formilio is to provide an open source form generation tool ( like google forms ), keeping in
- mind ease of access and usability. Using Formilio is simple and straight forward, you create a form and the app will provide you with a unique url. You can share this url to collect responses.
- </p>
- <p>
- You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements if you wish to implement your own project over it.
+Welcome to Formilio! The goal behind formilio is to provide an open source form generation tool ( like google forms ), keeping in mind ease of access and usability. Using Formilio is simple and straight forward, you create a form and the app will provide you with a unique url. You can share this url to collect responses.
+</p>
+<p>
+You can fully customize the Formilio app, frontend form and backend api as per your needs and requirements if you wish to implement your own project over it.
 Don't forget to star the project 🌟
 </p>
 
