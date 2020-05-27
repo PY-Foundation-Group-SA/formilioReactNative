@@ -5,10 +5,10 @@
 # Formilio - React Native App
 
 [![Build Status](https://travis-ci.com/sarthakpranesh/formilioReactNative.svg?branch=master)](https://travis-ci.com/sarthakpranesh/formilioReactNative)
-![GitHub issues](https://img.shields.io/github/issues/sarthakpranesh/formilioReactNative)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/sarthakpranesh/formilioReactNative)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/sarthakpranesh/formilioReactNative)
-![GitHub](https://img.shields.io/github/license/sarthakpranesh/formilioReactNative)
+[![GitHub issues](https://img.shields.io/github/issues/sarthakpranesh/formilioReactNative)](https://github.com/sarthakpranesh/formilioReactNative/issues)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/sarthakpranesh/formilioReactNative)](https://github.com/sarthakpranesh/formilioReactNative/commits/master)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/sarthakpranesh/formilioReactNative)](https://github.com/sarthakpranesh/formilioReactNative/pulls)
+[![GitHub](https://img.shields.io/github/license/sarthakpranesh/formilioReactNative)](https://github.com/sarthakpranesh/formilioReactNative/blob/master/LICENSE)
 
 </div>
 
