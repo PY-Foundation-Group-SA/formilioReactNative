@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
-import {View, FlatList, Alert, BackHandler} from 'react-native';
+import React, {Component, useContext} from 'react';
+import {View, FlatList, Alert, BackHandler, StyleSheet} from 'react-native';
 import {
   ActivityIndicator,
   Searchbar,
@@ -19,10 +19,133 @@ import {Context as UserContext} from '../../contexts/UserContext';
 import Fab from '../../components/Fab';
 
 // importing apiHelpers
-import {getAllForms, getValidate} from '../../utils/apiHelpers';
+import {getAllForms, getValidate, deleteForm} from '../../utils/apiHelpers';
 
 // importing styles
 import styles from './styles';
+import Animated, {
+  useCode,
+  cond,
+  eq,
+  add,
+  set,
+  min,
+  abs,
+  divide,
+} from 'react-native-reanimated';
+import {PanGestureHandler, State} from 'react-native-gesture-handler';
+import {
+  usePanGestureHandler,
+  useValue,
+  timing,
+  snapPoint,
+  useClock,
+} from 'react-native-redash';
+
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
+const SwipeAction = ({x}) => {
+  const {theme} = useContext(UserContext);
+  const size = divide(x, 100);
+  const translateFromRight = divide(x, -4);
+
+  return (
+    <AnimatedIcon
+      style={{
+        transform: [{scale: size}, {translateX: translateFromRight}],
+      }}
+      name="trash-2"
+      size={50}
+      color={theme ? 'white' : 'black'}
+    />
+  );
+};
+
+const ListItem = ({item, navigation, onSwipe}) => {
+  const snapPoints = [-100, 0];
+  const {gestureHandler, translation, velocity, state} = usePanGestureHandler();
+  const translateX = useValue(0);
+  const offSetX = useValue(0);
+  const clock = useClock();
+  const to = snapPoint(translateX, velocity.x, snapPoints);
+
+  useCode(() => [
+    cond(
+      eq(state, State.ACTIVE),
+      set(translateX, add(offSetX, min(translation.x, 0))),
+    ),
+    cond(eq(state, State.END), [
+      set(translateX, timing({clock, from: translateX, to})),
+      set(offSetX, translateX),
+    ]),
+  ]);
+
+  return (
+    <Animated.View>
+      <View
+        style={[
+          {
+            ...StyleSheet.absoluteFill,
+            backgroundColor: 'red',
+            borderRadius: 8,
+          },
+          styles.Card,
+        ]}>
+        <TouchableRipple
+          onPress={() => onSwipe()}
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              padding: 0,
+            },
+          ]}>
+          <SwipeAction x={abs(translateX)} />
+        </TouchableRipple>
+      </View>
+      <PanGestureHandler {...gestureHandler}>
+        <Animated.View style={{height: 100, transform: [{translateX}]}}>
+          <Card style={[StyleSheet.absoluteFill, styles.Card]} elevation={4}>
+            <TouchableRipple
+              onPress={() =>
+                navigation.navigate('FormViewScreen', {
+                  fid: item._id,
+                })
+              }
+              style={StyleSheet.absoluteFill}>
+              <Card.Title
+                title={item.formName}
+                subtitle={item.description}
+                left={({size}) => (
+                  <Avatar.Text
+                    size={size}
+                    label={item.formName.split(' ')[0][0].toUpperCase()}
+                  />
+                )}
+                right={({size}) => (
+                  <IconButton
+                    size={size}
+                    animated={true}
+                    icon={({color}) => (
+                      <Icon size={size} name="arrow-right" color={color} />
+                    )}
+                    onPress={() =>
+                      navigation.navigate('FormViewScreen', {
+                        fid: item._id,
+                      })
+                    }
+                  />
+                )}
+              />
+            </TouchableRipple>
+          </Card>
+        </Animated.View>
+      </PanGestureHandler>
+    </Animated.View>
+  );
+};
 
 class HomeScreen extends Component {
   static contextType = UserContext;
@@ -134,41 +257,43 @@ class HomeScreen extends Component {
     this.props.navigation.openDrawer();
   };
 
-  renderList = ({item}) => {
+  onSwipe = async (fid, i) => {
+    const {state} = this.context;
+    Alert.alert(
+      'Delete Form',
+      'Your are about to delete a form. All response collected through that form will be deleted!',
+      [
+        {text: 'cancel'},
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              const isDeleted = await deleteForm(state.token, fid);
+              if (!isDeleted) {
+                throw new Error('Unable to delete form!');
+              }
+              this.fetchFormsFromDatabase();
+            } catch (err) {
+              console.log(err);
+              Alert.alert('Delete Form', err.message, [
+                {text: 'cancel'},
+                {text: 'Retry', onPress: () => this.deleteFormHandler()},
+              ]);
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  renderListItem = ({item, index}) => {
     return (
-      <Card style={styles.Card} elevation={4}>
-        <TouchableRipple
-          onPress={() =>
-            this.props.navigation.navigate('FormViewScreen', {
-              fid: item._id,
-            })
-          }>
-          <Card.Title
-            title={item.formName}
-            subtitle={item.description}
-            left={({size}) => (
-              <Avatar.Text
-                size={size}
-                label={item.formName.split(' ')[0][0].toUpperCase()}
-              />
-            )}
-            right={({size}) => (
-              <IconButton
-                size={size}
-                animated={true}
-                icon={({color}) => (
-                  <Icon size={size} name="arrow-right" color={color} />
-                )}
-                onPress={() =>
-                  this.props.navigation.navigate('FormViewScreen', {
-                    fid: item._id,
-                  })
-                }
-              />
-            )}
-          />
-        </TouchableRipple>
-      </Card>
+      <ListItem
+        item={item}
+        navigation={this.props.navigation}
+        onSwipe={() => this.onSwipe(item._id, index)}
+      />
     );
   };
 
@@ -260,7 +385,7 @@ class HomeScreen extends Component {
             style={styles.flatList}
             data={formList}
             keyExtractor={(item) => item._id}
-            renderItem={this.renderList}
+            renderItem={this.renderListItem}
             ListEmptyComponent={this.ListEmptyComponent(theme)}
             refreshing={isListRefreshing}
             onRefresh={this.onRefresh}

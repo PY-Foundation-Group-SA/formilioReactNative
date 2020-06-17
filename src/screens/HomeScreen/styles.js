@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 export default StyleSheet.create({
   homeScreenLoaderContainer: {
@@ -32,7 +32,6 @@ export default StyleSheet.create({
   Card: {
     marginVertical: 10,
     marginHorizontal: 20,
-    maxHeight: 160,
     overflow: 'hidden',
   },
   cardInnerHeader: {
