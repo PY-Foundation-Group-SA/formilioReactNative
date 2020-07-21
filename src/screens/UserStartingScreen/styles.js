@@ -15,11 +15,11 @@ export default StyleSheet.create({
     right: 10,
   },
   inputContainer: {
-    marginVertical: 20,
+    marginVertical: 10,
     width: Dimensions.get('window').width - 40,
   },
   modeToggleContainer: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 4,
   },
 });

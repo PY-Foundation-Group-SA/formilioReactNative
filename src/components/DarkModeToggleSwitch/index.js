@@ -1,11 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useContext, useRef} from 'react';
-import {View, StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Animated, Dimensions} from 'react-native';
 import {Switch} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
 // importing context for theme preference
 import {Context as UserContext} from '../../contexts/UserContext';
+import Styles from '../../Styles';
+
+const  {width} = Dimensions.get('window')
 
 const DarkModeToggleSwitch = () => {
   const animateStart = useRef(new Animated.Value(0)).current;
@@ -37,7 +40,7 @@ const DarkModeToggleSwitch = () => {
           color: state.theme ? 'white' : 'black',
           transform: [{rotate: rotateData}],
         }}>
-        <Icon name={state.theme ? 'moon' : 'sun'} size={24} />
+        <Icon name={state.theme ? 'moon' : 'sun'} size={width * 0.06} />
       </Animated.Text>
     </View>
   );

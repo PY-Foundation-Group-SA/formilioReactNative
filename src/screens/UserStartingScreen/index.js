@@ -24,6 +24,7 @@ import {loginUser, signUpUser} from '../../utils/apiHelpers';
 import {getData} from '../../utils/asyncStorageHelper';
 
 // importing styles
+import Styles from '../../Styles.js';
 import styles from './styles';
 
 const {height} = Dimensions.get('window');
@@ -230,7 +231,7 @@ class UserStartingScreen extends Component {
               backgroundColor: theme ? 'black' : 'white',
             },
           ]}>
-          <ActivityIndicator />
+          <ActivityIndicator size="small" />
         </View>
       );
     }
@@ -245,6 +246,7 @@ class UserStartingScreen extends Component {
             },
           ]}>
           <Button
+            labelStyle={Styles.fontSmall}
             style={[
               styles.screenSwitcherStarting,
               {
@@ -259,7 +261,7 @@ class UserStartingScreen extends Component {
               opacity: this.screenLoadingOpacity,
               transform: [{translateY: this.headerTransition}],
             }}>
-            <Headline>
+            <Headline style={Styles.fontMedium}>
               {isOnLogin ? 'Login To Formilio' : 'Join Formilio'}
             </Headline>
           </Animated.View>
@@ -275,11 +277,14 @@ class UserStartingScreen extends Component {
               mode="outlined"
               label="Email Id"
               value={email}
-              onChangeText={(a) => this.setEmail(a)}
-              style={{
-                marginHorizontal: 40,
-              }}
               dense={true}
+              onChangeText={(a) => this.setEmail(a)}
+              style={[
+                Styles.fontMedium,
+                {
+                  marginHorizontal: 20,
+                },
+              ]}
             />
             <TextInput
               ref={(r) => (this.passwordRef = r)}
@@ -287,19 +292,26 @@ class UserStartingScreen extends Component {
               label="Password"
               value={password}
               onChangeText={(h) => this.setPassword(h)}
-              style={{
-                marginTop: 10,
-                marginHorizontal: 40,
-              }}
-              secureTextEntry={true}
               dense={true}
+              style={[
+                Styles.fontMedium,
+                {
+                  marginTop: 10,
+                  marginHorizontal: 20,
+                },
+              ]}
+              secureTextEntry={true}
             />
           </Animated.View>
           <Animated.View
             style={{
               transform: [{translateY: this.buttonTransition}],
             }}>
-            <Button mode="contained" loading={false} onPress={this.onPress}>
+            <Button
+              labelStyle={Styles.fontSmall}
+              mode="contained"
+              loading={false}
+              onPress={this.onPress}>
               {isOnLogin ? 'Login' : 'Sign Up'}
             </Button>
           </Animated.View>
