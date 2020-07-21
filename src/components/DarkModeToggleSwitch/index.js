@@ -6,9 +6,8 @@ import Icon from 'react-native-vector-icons/Feather';
 
 // importing context for theme preference
 import {Context as UserContext} from '../../contexts/UserContext';
-import Styles from '../../Styles';
 
-const  {width} = Dimensions.get('window')
+const {width} = Dimensions.get('window');
 
 const DarkModeToggleSwitch = () => {
   const animateStart = useRef(new Animated.Value(0)).current;
