@@ -46,13 +46,13 @@ const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 const SwipeAction = ({x}) => {
   const {theme} = useContext(UserContext);
-  const size = divide(x, 100);
+  const scale = divide(x, 100);
   const translateFromRight = divide(x, -4);
 
   return (
     <AnimatedIcon
       style={{
-        transform: [{scale: size}, {translateX: translateFromRight}],
+        transform: [{scale}, {translateX: translateFromRight}],
       }}
       name="trash-2"
       size={50}
@@ -102,7 +102,7 @@ const ListItem = ({item, navigation, onSwipe}) => {
               padding: 0,
             },
           ]}>
-          <SwipeAction x={abs(translateX)} />
+          <SwipeAction x={min(abs(translateX), 100)} />
         </TouchableRipple>
       </View>
       <PanGestureHandler {...gestureHandler}>
